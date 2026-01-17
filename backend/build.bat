@@ -13,8 +13,8 @@ echo Compiling three_sum...
 gcc -Wall -Wextra -Iinclude src/three_sum.c build/logger.o -o build/three_sum.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-echo Compiling valid-parentheses...
-gcc -Wall -Wextra -Iinclude src/valid-parentheses.c build/logger.o -o build/valid-parentheses.exe
+echo Compiling valid_parentheses...
+gcc -Wall -Wextra -Iinclude src/valid_parentheses.c build/logger.o -o build/valid_parentheses.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo Compiling reverse_linked_list...
@@ -95,6 +95,14 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo Compiling deque_ll...
 gcc -Wall -Wextra -Iinclude src/deque_ll.c build/logger.o -o build/deque_ll.exe
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+echo Compiling recursion_fib...
+gcc -Wall -Wextra -Iinclude src/recursion_fib.c build/logger.o -o build/recursion_fib.exe
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+echo Compiling factorial...
+gcc -Wall -Wextra -Iinclude src/factorial.c build/logger.o -o build/factorial.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo Build successful!

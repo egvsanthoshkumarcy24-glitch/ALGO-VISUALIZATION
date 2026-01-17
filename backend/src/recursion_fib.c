@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "../include/logger.h"
+
+int node_id_counter = 0;
+
+int fib(int n, int parent_id) {
+    int current_id = node_id_counter++;
+    char label[32];
+    sprintf(label, "fib(%d)", n);
+
+    log_step_start();
+    log_node(current_id, label);
+    if (parent_id != -1) {
+        log_edge(parent_id, current_id);
+    }
+    log_var("n", n);
+    char msg[128];
+    sprintf(msg, "Calling fib(%d)", n);
+    log_message(msg);
+    log_step_end();
+
+    if (n <= 1) {
+        log_step_start();
+        log_node(current_id, label);
+        if (parent_id != -1) log_edge(parent_id, current_id);
+        log_var("n", n);
+        sprintf(msg, "Base case: return %d", n);
+        log_message(msg);
+        log_step_end();
+        return n;
+    }
+
+    int v1 = fib(n - 1, current_id);
+    int v2 = fib(n - 2, current_id);
+    int res = v1 + v2;
+
+    log_step_start();
+    log_node(current_id, label);
+    if (parent_id != -1) log_edge(parent_id, current_id);
+    log_var("n", n);
+    log_var("result", res);
+    sprintf(msg, "Returning fib(%d) + fib(%d) = %d", n-1, n-2, res);
+    log_message(msg);
+    log_step_end();
+
+    return res;
+}
+
+int main(int argc, char* argv[]) {
+    if (argc < 2) return 1;
+    int n = atoi(argv[1]);
+
+    log_init();
+    fib(n, -1);
+    log_finish();
+    return 0;
+}

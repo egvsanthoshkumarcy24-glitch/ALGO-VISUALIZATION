@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, Button } from './ui/common';
 import { VisualizerEngine } from './VisualizerEngine';
-import { Play, Pause, SkipBack, SkipForward, RefreshCw, ArrowLeft, Loader2, AlertCircle, Settings } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, RefreshCw, ArrowLeft, Loader2, AlertCircle, Settings, Clock, Boxes } from 'lucide-react';
 
 export function InterviewMode({ problem, onBack }) {
     const [logs, setLogs] = useState([]);
@@ -150,6 +150,27 @@ export function InterviewMode({ problem, onBack }) {
                 </div>
 
                 <div className="flex-1 overflow-auto p-6 space-y-8">
+                    {/* Complexity Info */}
+                    <div className="bg-gradient-to-br from-[var(--color-bg-tertiary)] to-[var(--color-bg-primary)] p-4 rounded-xl border border-[var(--color-border)] space-y-3">
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-3">Complexity Analysis</h3>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="flex flex-col">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <Clock size={14} className="text-blue-400" />
+                                    <span className="text-[10px] uppercase tracking-wide text-[var(--color-text-secondary)]">Time</span>
+                                </div>
+                                <span className="text-sm font-mono font-bold text-blue-300">{problem.timeComplexity || "N/A"}</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <Boxes size={14} className="text-purple-400" />
+                                    <span className="text-[10px] uppercase tracking-wide text-[var(--color-text-secondary)]">Space</span>
+                                </div>
+                                <span className="text-sm font-mono font-bold text-purple-300">{problem.spaceComplexity || "N/A"}</span>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Description */}
                     <div className="prose prose-invert prose-sm max-w-none">
                         <p className="text-[var(--color-text-secondary)] leading-relaxed">

@@ -27,25 +27,25 @@
 }
 
 [data-theme="light"] {
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f6f8fa;
-  --color-bg-tertiary: #eaeef2;
+  --color-bg-primary: #f8f9fa;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f0f2f5;
   
-  --color-accent-primary: #0969da;
-  --color-accent-secondary: #1f6feb;
-  --color-accent-hover: #388bfd;
+  --color-accent-primary: #0d47a1;
+  --color-accent-secondary: #1565c0;
+  --color-accent-hover: #1976d2;
   
-  --color-text-primary: #24292f;
-  --color-text-secondary: #57606a;
-  --color-text-tertiary: #8c959f;
+  --color-text-primary: #1a202c;
+  --color-text-secondary: #4a5568;
+  --color-text-tertiary: #718096;
 
-  --color-border: #d0d7de;
+  --color-border: #cbd5e0;
   
   /* Syntax Highlighting */
-  --sh-keyword: #d1242f;
-  --sh-string: #0a3069;
+  --sh-keyword: #c41e3a;
+  --sh-string: #0b4f8f;
   --sh-function: #6f42c1;
-  --sh-comment: #6e7681;
+  --sh-comment: #6b7280;
 }
 
 body {
@@ -79,12 +79,26 @@ code, pre {
   background: #3a4149; 
 }
 
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}
+
 /* Glassmorphism Utilities */
 .glass-panel {
   background: rgba(22, 27, 34, 0.7);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(48, 54, 61, 0.5);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(203, 213, 224, 0.5);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
 }
 
 .glass-button {
@@ -99,6 +113,17 @@ code, pre {
   border-color: rgba(88, 166, 255, 0.4);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(31, 111, 235, 0.2);
+}
+
+[data-theme="light"] .glass-button {
+  background: linear-gradient(135deg, rgba(13, 71, 161, 0.08) 0%, rgba(13, 71, 161, 0.04) 100%);
+  border: 1px solid rgba(13, 71, 161, 0.15);
+}
+
+[data-theme="light"] .glass-button:hover {
+  background: linear-gradient(135deg, rgba(13, 71, 161, 0.15) 0%, rgba(13, 71, 161, 0.08) 100%);
+  border-color: rgba(13, 71, 161, 0.3);
+  box-shadow: 0 4px 12px rgba(13, 71, 161, 0.12);
 }
 
 /* Animations */

@@ -26,6 +26,28 @@
   --sh-comment: #8b949e;
 }
 
+[data-theme="light"] {
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f6f8fa;
+  --color-bg-tertiary: #eaeef2;
+  
+  --color-accent-primary: #0969da;
+  --color-accent-secondary: #1f6feb;
+  --color-accent-hover: #388bfd;
+  
+  --color-text-primary: #24292f;
+  --color-text-secondary: #57606a;
+  --color-text-tertiary: #8c959f;
+
+  --color-border: #d0d7de;
+  
+  /* Syntax Highlighting */
+  --sh-keyword: #d1242f;
+  --sh-string: #0a3069;
+  --sh-function: #6f42c1;
+  --sh-comment: #6e7681;
+}
+
 body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);

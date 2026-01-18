@@ -451,34 +451,6 @@ int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes
         runCommand: 'deque_ll'
     },
     {
-        id: 'three_sum',
-        title: '3 Sum',
-        category: CATEGORIES.TWO_POINTERS,
-        difficulty: 'Medium',
-        description: 'Find all unique triplets in the array which gives the sum of zero.',
-        codeSnippet: `// Two Pointers Approach
-// 1. Sort the array
-// 2. Iterate i from 0 to n-2
-// 3. Use Two Pointers (left, right) to find sum = 0`,
-        inputs: [
-            { name: "nums", label: "Input Array", type: "array", defaultValue: "-1, 0, 1, 2, -1, -4" }
-        ],
-        runCommand: 'three_sum'
-    },
-    {
-        id: 'longest_substring',
-        title: 'Longest Substring Without Repeating Characters',
-        category: CATEGORIES.SLIDING_WINDOW,
-        difficulty: 'Medium',
-        description: 'Find the length of the longest substring without repeating characters.',
-        codeSnippet: `// Sliding Window Approach
-// Use a map/set to track characters in current window.`,
-        inputs: [
-            { name: "s", label: "Input String", type: "text", defaultValue: "abcabcbb" }
-        ],
-        runCommand: 'longest_substring'
-    },
-    {
         id: 'factorial',
         title: 'Factorial (Recursion)',
         category: CATEGORIES.RECURSION,

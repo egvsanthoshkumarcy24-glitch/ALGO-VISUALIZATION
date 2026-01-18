@@ -22,7 +22,7 @@ app.post('/run/:algorithm', (req, res) => {
         return res.status(400).json({ error: "Invalid algorithm name" });
     }
 
-    const executablePath = path.join(BUILD_DIR, `${algorithm}.exe`);
+    const executablePath = path.join(BUILD_DIR, algorithm);
 
     // Check if executable exists
     if (!fs.existsSync(executablePath)) {
@@ -36,7 +36,7 @@ app.post('/run/:algorithm', (req, res) => {
     const args = safeInputs.map(arg => `"${arg}"`).join(' ');
 
     // Execute the C program
-    exec(`"${executablePath}" ${args}`, (error, stdout, stderr) => {
+    exec(`${executablePath} ${args}`, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error executing ${algorithm}:`, error);
             console.error(`Stderr:`, stderr);
@@ -65,7 +65,7 @@ app.get('/run/:algorithm', (req, res) => {
     }
 
 
-    const executablePath = path.join(BUILD_DIR, `${algorithm}.exe`);
+    const executablePath = path.join(BUILD_DIR, algorithm);
 
     // Check if executable exists
     if (!fs.existsSync(executablePath)) {
@@ -73,7 +73,7 @@ app.get('/run/:algorithm', (req, res) => {
     }
 
     // Execute the C program
-    exec(`"${executablePath}"`, (error, stdout, stderr) => {
+    exec(executablePath, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error executing ${algorithm}:`, error);
             return res.status(500).json({ error: "Execution failed", details: stderr });

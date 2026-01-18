@@ -2,9 +2,16 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "build": "make all",
+    "build:dev": "make dev",
+    "build:prod": "make prod",
+    "test": "make test",
+    "format": "make format",
+    "format:check": "make format-check"
   },
   "keywords": [],
   "author": "",

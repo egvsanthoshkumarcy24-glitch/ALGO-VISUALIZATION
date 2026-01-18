@@ -7,12 +7,28 @@ export function InterviewMode({ problem, onBack }) {
     const [logs, setLogs] = useState([]);
     const [currentStep, setCurrentStep] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [isLoading, setIsLoading] = useState(false); // Default false, wait for user or auto-run
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [theme, setTheme] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return document.documentElement.getAttribute('data-theme') || 'dark';
+        }
+        return 'dark';
+    });
     const timerRef = useRef(null);
 
     // Form State
     const [inputValues, setInputValues] = useState({});
+
+    React.useEffect(() => {
+        const observer = new MutationObserver(() => {
+            setTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        return () => observer.disconnect();
+    }, []);
+
+    const isDark = theme === 'dark';
 
     // Initialize inputs from default values
     useEffect(() => {
@@ -133,17 +149,17 @@ export function InterviewMode({ problem, onBack }) {
                     <Button variant="ghost" onClick={onBack} className="mb-4 -ml-2 text-sm text-[var(--color-text-secondary)] pl-0 gap-1 hover:bg-transparent hover:text-[var(--color-accent-primary)]">
                         <ArrowLeft size={16} /> Back to Dashboard
                     </Button>
-                    <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-2">
+                    <h1 className={`text-2xl font-bold ${isDark ? 'bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500' : 'text-[var(--color-accent-primary)]'} mb-2`}>
                         {problem.title}
                     </h1>
                     <div className="flex gap-2">
-                        <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider border ${problem.difficulty === 'Easy' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                                problem.difficulty === 'Medium' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
-                                    'bg-red-500/10 text-red-400 border-red-500/20'
+                        <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider border ${problem.difficulty === 'Easy' ? isDark ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-green-100 text-green-700 border-green-300' :
+                                problem.difficulty === 'Medium' ? isDark ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' : 'bg-yellow-100 text-yellow-700 border-yellow-300' :
+                                    isDark ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-red-100 text-red-700 border-red-300'
                             }`}>
                             {problem.difficulty}
                         </span>
-                        <span className="px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
+                        <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${isDark ? 'bg-[var(--color-bg-tertiary)]' : 'bg-[var(--color-bg-tertiary)]'} text-[var(--color-text-secondary)] border border-[var(--color-border)]`}>
                             {problem.category}
                         </span>
                     </div>
@@ -151,22 +167,22 @@ export function InterviewMode({ problem, onBack }) {
 
                 <div className="flex-1 overflow-auto p-6 space-y-8">
                     {/* Complexity Info */}
-                    <div className="bg-gradient-to-br from-[var(--color-bg-tertiary)] to-[var(--color-bg-primary)] p-4 rounded-xl border border-[var(--color-border)] space-y-3">
+                    <div className={`${isDark ? 'bg-gradient-to-br from-[var(--color-bg-tertiary)] to-[var(--color-bg-primary)]' : 'bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-accent-primary)]/5'} p-4 rounded-xl border border-[var(--color-border)] space-y-3`}>
                         <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-3">Complexity Analysis</h3>
                         <div className="grid grid-cols-2 gap-3">
                             <div className="flex flex-col">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <Clock size={14} className="text-blue-400" />
+                                    <Clock size={14} className={isDark ? "text-blue-400" : "text-blue-600"} />
                                     <span className="text-[10px] uppercase tracking-wide text-[var(--color-text-secondary)]">Time</span>
                                 </div>
-                                <span className="text-sm font-mono font-bold text-blue-300">{problem.timeComplexity || "N/A"}</span>
+                                <span className={`text-sm font-mono font-bold ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>{problem.timeComplexity || "N/A"}</span>
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <Boxes size={14} className="text-purple-400" />
+                                    <Boxes size={14} className={isDark ? "text-purple-400" : "text-purple-600"} />
                                     <span className="text-[10px] uppercase tracking-wide text-[var(--color-text-secondary)]">Space</span>
                                 </div>
-                                <span className="text-sm font-mono font-bold text-purple-300">{problem.spaceComplexity || "N/A"}</span>
+                                <span className={`text-sm font-mono font-bold ${isDark ? 'text-purple-300' : 'text-purple-700'}`}>{problem.spaceComplexity || "N/A"}</span>
                             </div>
                         </div>
                     </div>
@@ -237,16 +253,16 @@ export function InterviewMode({ problem, onBack }) {
                             </div>
                         ) : (
                             <div className="font-mono text-sm text-[var(--color-text-secondary)] bg-[var(--color-bg-tertiary)] px-3 py-1 rounded-md border border-[var(--color-border)]">
-                                Step <span className="text-white font-bold">{currentStep + 1}</span> / {logs.length}
+                                Step <span className={isDark ? "text-white" : "text-[var(--color-text-primary)]"} >{currentStep + 1}</span> / {logs.length}
                             </div>
                         )}
                     </div>
                 </header>
 
                 {/* Canvas */}
-                <div className="flex-1 p-8 flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#161b22] via-[#0f1115] to-[#0f1115] relative overflow-hidden">
+                <div className={`flex-1 p-8 flex items-center justify-center ${isDark ? 'bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#161b22] via-[#0f1115] to-[#0f1115]' : 'bg-gradient-to-br from-[var(--color-bg-primary)] via-[var(--color-bg-secondary)] to-[var(--color-bg-primary)]'} relative overflow-hidden`}>
                     {/* Background decoration */}
-                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none"></div>
+                    <div className={`absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] ${isDark ? 'opacity-[0.03]' : 'opacity-[0.02]'} pointer-events-none`}></div>
 
                     <div className="z-10 w-full max-w-4xl flex items-center justify-center">
                         {isLoading ? (
@@ -254,9 +270,9 @@ export function InterviewMode({ problem, onBack }) {
                                 <Loader2 size={48} className="animate-spin text-[var(--color-accent-primary)] opacity-50" />
                             </div>
                         ) : error ? (
-                            <div className="max-w-md bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-center">
-                                <h3 className="text-lg font-bold text-red-400 mb-2">Execution Failed</h3>
-                                <p className="text-sm text-red-300/80 mb-4">{error}</p>
+                            <div className={`max-w-md ${isDark ? 'bg-red-500/10 border-red-500/20' : 'bg-red-50 border-red-200'} border rounded-xl p-6 text-center`}>
+                                <h3 className={`text-lg font-bold ${isDark ? 'text-red-400' : 'text-red-700'} mb-2`}>Execution Failed</h3>
+                                <p className={`text-sm ${isDark ? 'text-red-300/80' : 'text-red-600'} mb-4`}>{error}</p>
                             </div>
                         ) : (
                             <VisualizerEngine step={logs[currentStep]} />

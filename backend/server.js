@@ -7,11 +7,40 @@ const fs = require('fs');
 const app = express();
 const PORT = 3001;
 
+// Configuration
+const EXECUTION_TIMEOUT = 5000; // 5 seconds max execution time
+const MAX_INPUT_LENGTH = 1000; // Maximum characters per input
+const MAX_INPUTS = 100; // Maximum number of inputs
+
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // Path to the build directory where C executables are located
 const BUILD_DIR = path.join(__dirname, 'build');
+
+// Input validation helper
+function validateInputs(inputs) {
+    if (!Array.isArray(inputs)) {
+        return { valid: false, error: 'Inputs must be an array' };
+    }
+    
+    if (inputs.length === 0) {
+        return { valid: false, error: 'Please provide input values. The input cannot be empty.' };
+    }
+    
+    if (inputs.length > MAX_INPUTS) {
+        return { valid: false, error: `Too many inputs. Maximum ${MAX_INPUTS} allowed.` };
+    }
+    
+    for (let i = 0; i < inputs.length; i++) {
+        const input = String(inputs[i]);
+        if (input.length > MAX_INPUT_LENGTH) {
+            return { valid: false, error: `Input ${i + 1} is too long. Maximum ${MAX_INPUT_LENGTH} characters.` };
+        }
+    }
+    
+    return { valid: true };
+}
 
 app.post('/run/:algorithm', (req, res) => {
     const algorithm = req.params.algorithm;
@@ -20,6 +49,12 @@ app.post('/run/:algorithm', (req, res) => {
     // Sanitize input to prevent command injection (alphanumeric and hyphens only)
     if (!/^[a-z0-9_-]+$/i.test(algorithm)) {
         return res.status(400).json({ error: "Invalid algorithm name" });
+    }
+
+    // Validate inputs
+    const validation = validateInputs(inputs);
+    if (!validation.valid) {
+        return res.status(400).json({ error: validation.error });
     }
 
     const executablePath = path.join(BUILD_DIR, algorithm);
@@ -35,9 +70,18 @@ app.post('/run/:algorithm', (req, res) => {
     const safeInputs = inputs.map(arg => String(arg).replace(/[^a-zA-Z0-9\-\s,()[\]{}]/g, ''));
     const args = safeInputs.map(arg => `"${arg}"`).join(' ');
 
-    // Execute the C program
-    exec(`${executablePath} ${args}`, (error, stdout, stderr) => {
+    // Execute the C program with timeout
+    const child = exec(`${executablePath} ${args}`, {
+        timeout: EXECUTION_TIMEOUT,
+        maxBuffer: 1024 * 1024 // 1MB buffer
+    }, (error, stdout, stderr) => {
         if (error) {
+            if (error.killed) {
+                return res.status(408).json({ 
+                    error: "Execution timeout",
+                    details: `Algorithm took longer than ${EXECUTION_TIMEOUT / 1000} seconds.`
+                });
+            }
             console.error(`Error executing ${algorithm}:`, error);
             console.error(`Stderr:`, stderr);
             return res.status(500).json({ error: "Execution failed", details: stderr });

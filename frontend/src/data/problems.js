@@ -129,7 +129,7 @@ int main() {
         difficulty: 'Medium',
         timeComplexity: "O(n log n)",
         spaceComplexity: "O(n)",
-        description: 'Divide the array into halves, sort them, and then merge the sorted halves.',
+        description: 'Divide the array into halves, sort them, and then merge the sorted halves. A classic divide-and-conquer algorithm.',
         codeSnippet: `void mergeSort(int arr[], int l, int r) {
     if (l < r) {
         int m = l + (r - l) / 2;
@@ -137,6 +137,92 @@ int main() {
         mergeSort(arr, m + 1, r);
         merge(arr, l, m, r);
     }
+}`,
+        fullCode: `#include <stdio.h>
+#include <stdlib.h>
+
+// Merge function - combines two sorted subarrays
+void merge(int arr[], int left, int mid, int right) {
+    int i, j, k;
+    int n1 = mid - left + 1;  // Size of left subarray
+    int n2 = right - mid;     // Size of right subarray
+    
+    // Create temporary arrays
+    int* L = (int*)malloc(n1 * sizeof(int));
+    int* R = (int*)malloc(n2 * sizeof(int));
+    
+    // Copy data to temporary arrays L[] and R[]
+    for (i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+    
+    // Merge the temp arrays back into arr[left..right]
+    i = 0;    // Initial index of first subarray
+    j = 0;    // Initial index of second subarray
+    k = left; // Initial index of merged subarray
+    
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+    
+    // Copy remaining elements of L[], if any
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+    
+    // Copy remaining elements of R[], if any
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+    
+    free(L);
+    free(R);
+}
+
+// Main merge sort function
+void mergeSort(int arr[], int left, int right) {
+    if (left < right) {
+        // Find the middle point
+        int mid = left + (right - left) / 2;
+        
+        // Sort first half
+        mergeSort(arr, left, mid);
+        
+        // Sort second half
+        mergeSort(arr, mid + 1, right);
+        
+        // Merge the sorted halves
+        merge(arr, left, mid, right);
+    }
+}
+
+int main() {
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    
+    printf("Original array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    mergeSort(arr, 0, n - 1);
+    
+    printf("\\nSorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    return 0;
 }`,
         inputs: [
             { name: "nums", label: "Array to Sort", type: "array", defaultValue: "12, 11, 13, 5, 6, 7" }
@@ -150,13 +236,78 @@ int main() {
         difficulty: 'Medium',
         timeComplexity: "O(n log n)",
         spaceComplexity: "O(log n)",
-        description: 'Pick a pivot element and partition the array around it, then recursively sort the partitions.',
+        description: 'Pick a pivot element and partition the array around it, then recursively sort the partitions. Efficient in-place sorting algorithm.',
         codeSnippet: `void quickSort(int arr[], int low, int high) {
     if (low < high) {
         int pi = partition(arr, low, high);
         quickSort(arr, low, pi - 1);
         quickSort(arr, pi + 1, high);
     }
+}`,
+        fullCode: `#include <stdio.h>
+
+// Swap function
+void swap(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Partition function - places pivot in correct position
+// and arranges smaller elements to left, larger to right
+int partition(int arr[], int low, int high) {
+    // Choose the rightmost element as pivot
+    int pivot = arr[high];
+    
+    // Index of smaller element - indicates
+    // the right position of pivot found so far
+    int i = (low - 1);
+    
+    // Traverse through all elements
+    // Compare each element with pivot
+    for (int j = low; j < high; j++) {
+        // If current element is smaller than pivot
+        if (arr[j] < pivot) {
+            i++; // Increment index of smaller element
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    
+    // Place pivot in correct position
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
+}
+
+// Main quick sort function
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        // pi is partitioning index
+        // arr[pi] is now at right place
+        int pi = partition(arr, low, high);
+        
+        // Recursively sort elements before partition
+        quickSort(arr, low, pi - 1);
+        
+        // Recursively sort elements after partition
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+int main() {
+    int arr[] = {10, 7, 8, 9, 1, 5};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    
+    printf("Original array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    quickSort(arr, 0, n - 1);
+    
+    printf("\\nSorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    return 0;
 }`,
         inputs: [
             { name: "nums", label: "Array to Sort", type: "array", defaultValue: "10, 7, 8, 9, 1, 5" }

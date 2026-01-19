@@ -165,10 +165,36 @@ export function InterviewMode({ problem, onBack }) {
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-auto p-6 space-y-8">
+                <div className="flex-1 overflow-auto p-6 space-y-6">
+                    {/* Description */}
+                    <div className="space-y-3">
+                        <h3 className="text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                            </svg>
+                            What does this algorithm do?
+                        </h3>
+                        <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                            {problem.description}
+                        </p>
+                        <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800/50 rounded-lg p-3">
+                            <p className="text-xs text-blue-900 dark:text-blue-200 leading-relaxed flex items-start gap-2">
+                                <span className="text-blue-600 dark:text-blue-400 text-sm">ℹ️</span>
+                                <span>
+                                    {problem.id === 'bubble_sort' && "Great for beginners! Bubble sort is simple to understand but slow for large datasets. Best used for teaching purposes."}
+                                    {problem.id === 'merge_sort' && "One of the most efficient sorting algorithms! Always runs in O(n log n) time, making it reliable for large datasets."}
+                                    {problem.id === 'quick_sort' && "The most popular sorting algorithm! Usually very fast, though worst-case performance can be slow with poor pivot choices."}
+                                    {problem.id === 'binary_search' && "Incredibly fast search! Works only on sorted arrays but finds elements in logarithmic time - perfect for large datasets."}
+                                    {(problem.id === 'bfs' || problem.id === 'dfs') && `${problem.id === 'bfs' ? 'BFS' : 'DFS'} is fundamental for graph problems! Used in pathfinding, social networks, web crawlers, and more.`}
+                                    {!['bubble_sort', 'merge_sort', 'quick_sort', 'binary_search', 'bfs', 'dfs'].includes(problem.id) && "Understanding this algorithm will help you solve many real-world programming problems!"}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
                     {/* Complexity Info */}
                     <div className={`${isDark ? 'bg-gradient-to-br from-[var(--color-bg-tertiary)] to-[var(--color-bg-primary)]' : 'bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-accent-primary)]/5'} p-4 rounded-xl border border-[var(--color-border)] space-y-3`}>
-                        <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-3">Complexity Analysis</h3>
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-3">⚡ Performance</h3>
                         <div className="grid grid-cols-2 gap-3">
                             <div className="flex flex-col">
                                 <div className="flex items-center gap-2 mb-1">
@@ -176,6 +202,7 @@ export function InterviewMode({ problem, onBack }) {
                                     <span className="text-[10px] uppercase tracking-wide text-[var(--color-text-secondary)]">Time</span>
                                 </div>
                                 <span className={`text-sm font-mono font-bold ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>{problem.timeComplexity || "N/A"}</span>
+                                <span className="text-[9px] text-[var(--color-text-tertiary)] mt-1">How fast it runs</span>
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex items-center gap-2 mb-1">
@@ -183,15 +210,9 @@ export function InterviewMode({ problem, onBack }) {
                                     <span className="text-[10px] uppercase tracking-wide text-[var(--color-text-secondary)]">Space</span>
                                 </div>
                                 <span className={`text-sm font-mono font-bold ${isDark ? 'text-purple-300' : 'text-purple-700'}`}>{problem.spaceComplexity || "N/A"}</span>
+                                <span className="text-[9px] text-[var(--color-text-tertiary)] mt-1">Memory needed</span>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Description */}
-                    <div className="prose prose-invert prose-sm max-w-none">
-                        <p className="text-[var(--color-text-secondary)] leading-relaxed">
-                            {problem.description}
-                        </p>
                     </div>
 
                     {/* Inputs Configuration */}
@@ -228,8 +249,12 @@ export function InterviewMode({ problem, onBack }) {
                     )}
 
                     {/* Code Snippet */}
-                    <div>
-                        <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">Solution Code</h3>
+                    <div className="space-y-2">
+                        <h3 className="text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
+                            <Code size={16} className="text-[var(--color-accent-primary)]" />
+                            Core Algorithm
+                        </h3>
+                        <p className="text-xs text-[var(--color-text-tertiary)]">Main function that implements the logic</p>
                         <div className="bg-[var(--color-bg-primary)] p-4 rounded-xl border border-[var(--color-border)] font-mono text-xs overflow-auto leading-relaxed max-h-48">
                             <pre className="whitespace-pre text-[var(--color-text-primary)]">{problem.codeSnippet || "// Code coming soon..."}</pre>
                         </div>
@@ -237,13 +262,14 @@ export function InterviewMode({ problem, onBack }) {
 
                     {/* Full Implementation (Collapsible) */}
                     {problem.fullCode && (
-                        <div>
+                        <div className="space-y-2">
                             <button
                                 onClick={() => setShowFullCode(!showFullCode)}
-                                className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2 hover:text-[var(--color-accent-primary)] transition-colors"
+                                className="flex items-center gap-2 text-sm font-bold text-[var(--color-text-primary)] hover:text-[var(--color-accent-primary)] transition-colors w-full"
                             >
-                                <Code size={14} />
-                                Full C Implementation
+                                <Code size={16} className="text-[var(--color-accent-secondary)]" />
+                                Complete Implementation
+                                <span className="text-xs text-[var(--color-text-tertiary)] ml-auto mr-2">(with helper functions)</span>
                                 {showFullCode ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                             </button>
                             {showFullCode && (
@@ -254,41 +280,143 @@ export function InterviewMode({ problem, onBack }) {
                         </div>
                     )}
 
-                    {/* Complexity Analysis */}
-                    {(problem.timeComplexity || problem.spaceComplexity) && (
-                        <div className="bg-[var(--color-bg-primary)] p-4 rounded-xl border border-[var(--color-border)]">
-                            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-3 flex items-center gap-2">
-                                <Clock size={14} />
-                                Complexity Analysis
-                            </h3>
-                            <div className="space-y-2 text-sm">
-                                {problem.timeComplexity && (
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-[var(--color-text-secondary)]">Time:</span>
-                                        <code className="px-2 py-1 bg-[var(--color-bg-tertiary)] rounded text-[var(--color-accent-primary)] font-mono font-bold">{problem.timeComplexity}</code>
-                                    </div>
-                                )}
-                                {problem.spaceComplexity && (
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-[var(--color-text-secondary)]">Space:</span>
-                                        <code className="px-2 py-1 bg-[var(--color-bg-tertiary)] rounded text-[var(--color-accent-cyan)] font-mono font-bold">{problem.spaceComplexity}</code>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-
                     {/* Beginner's Guide */}
-                    <div className="bg-gradient-to-br from-[var(--color-accent-primary)]/10 to-[var(--color-accent-secondary)]/10 p-4 rounded-xl border border-[var(--color-accent-primary)]/20">
-                        <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-accent-primary)] mb-2 flex items-center gap-2">
-                            <Boxes size={14} />
-                            Beginner's Tip
+                    <div className="bg-gradient-to-br from-[var(--color-accent-primary)]/10 to-[var(--color-accent-secondary)]/10 p-5 rounded-xl border border-[var(--color-accent-primary)]/30 space-y-3">
+                        <h3 className="text-sm font-bold tracking-wide text-[var(--color-accent-primary)] flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                            </svg>
+                            How to Use This Visualizer
                         </h3>
-                        <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-                            Watch the visualization step-by-step to understand how the algorithm works. 
-                            Use the speed controls to slow down or speed up the execution. 
-                            Variables and array states are shown in real-time!
-                        </p>
+                        <ul className="space-y-2 text-xs text-[var(--color-text-secondary)] leading-relaxed">
+                            <li className="flex gap-2">
+                                <span className="text-[var(--color-accent-green)] font-bold">①</span>
+                                <span><strong className="text-[var(--color-text-primary)]">Configure inputs</strong> above and click "Visualize"</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="text-[var(--color-accent-green)] font-bold">②</span>
+                                <span><strong className="text-[var(--color-text-primary)]">Watch step-by-step</strong> - each step shows what the algorithm is doing</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="text-[var(--color-accent-green)] font-bold">③</span>
+                                <span><strong className="text-[var(--color-text-primary)]">Adjust speed</strong> using the slider below (slower = easier to follow)</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="text-[var(--color-accent-green)] font-bold">④</span>
+                                <span><strong className="text-[var(--color-text-primary)]">Highlighted elements</strong> show what's being compared or changed</span>
+                            </li>
+                        </ul>
+                        <div className="pt-2 border-t border-[var(--color-accent-primary)]/20">
+                            <p className="text-xs text-[var(--color-accent-cyan)] font-medium">💡 Tip: Try running with small arrays first to understand the pattern!</p>
+                        </div>
+                    </div>
+
+                    {/* Key Concepts - Algorithm Specific */}
+                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 p-5 rounded-xl border-2 border-amber-300/50 dark:border-amber-700/50 space-y-3">
+                        <h3 className="text-sm font-bold tracking-wide text-amber-800 dark:text-amber-300 flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            What to Watch For
+                        </h3>
+                        <div className="space-y-2 text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                            {problem.id === 'bubble_sort' && (
+                                <>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🔄</span>
+                                        <span><strong>Multiple passes:</strong> Notice how the algorithm makes several passes through the array</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">⬆️</span>
+                                        <span><strong>Bubbling up:</strong> Watch how the largest element "bubbles" to the end in each pass</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🔁</span>
+                                        <span><strong>Adjacent comparisons:</strong> Elements are only compared with their immediate neighbors</span>
+                                    </p>
+                                </>
+                            )}
+                            {problem.id === 'merge_sort' && (
+                                <>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">✂️</span>
+                                        <span><strong>Divide phase:</strong> Watch how the array splits into smaller and smaller pieces</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🔀</span>
+                                        <span><strong>Merge phase:</strong> See how sorted pieces combine back together in order</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">📊</span>
+                                        <span><strong>Recursion tree:</strong> Each level represents a recursion depth (splits then merges)</span>
+                                    </p>
+                                </>
+                            )}
+                            {problem.id === 'quick_sort' && (
+                                <>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🎯</span>
+                                        <span><strong>Pivot selection:</strong> One element is chosen as the "pivot" (usually the last element)</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">⚖️</span>
+                                        <span><strong>Partitioning:</strong> Elements smaller than pivot go left, larger go right</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🔄</span>
+                                        <span><strong>Recursive sorting:</strong> Each partition is then sorted the same way</span>
+                                    </p>
+                                </>
+                            )}
+                            {problem.id === 'binary_search' && (
+                                <>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">📍</span>
+                                        <span><strong>Middle element:</strong> Always check the middle element first</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">✂️</span>
+                                        <span><strong>Halving:</strong> Search space is cut in half after each comparison</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">⚡</span>
+                                        <span><strong>Speed advantage:</strong> Notice how few steps it takes compared to linear search</span>
+                                    </p>
+                                </>
+                            )}
+                            {(problem.id === 'bfs' || problem.id === 'dfs') && (
+                                <>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🌳</span>
+                                        <span><strong>Traversal order:</strong> Watch the sequence nodes are visited</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🎯</span>
+                                        <span><strong>Discovery:</strong> Notice when each node is first discovered vs fully explored</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">📊</span>
+                                        <span><strong>{problem.id === 'bfs' ? 'Level by level' : 'Depth first'}:</strong> {problem.id === 'bfs' ? 'Goes through all neighbors before going deeper' : 'Goes as deep as possible before backtracking'}</span>
+                                    </p>
+                                </>
+                            )}
+                            {!['bubble_sort', 'merge_sort', 'quick_sort', 'binary_search', 'bfs', 'dfs'].includes(problem.id) && (
+                                <>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">👀</span>
+                                        <span><strong>Watch carefully:</strong> Observe how elements are compared and moved</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🔍</span>
+                                        <span><strong>Pattern recognition:</strong> Try to identify the strategy the algorithm uses</span>
+                                    </p>
+                                    <p className="flex items-start gap-2">
+                                        <span className="text-amber-600 dark:text-amber-400 font-bold">⏸️</span>
+                                        <span><strong>Use pause:</strong> Pause at any step to study what's happening</span>
+                                    </p>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
             </aside>

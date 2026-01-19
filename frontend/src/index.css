@@ -31,10 +31,10 @@
 }
 
 [data-theme="light"] {
-  /* Light Mode - Soft Gradient with Purple Accents */
-  --color-bg-primary: linear-gradient(135deg, #f5f7fa 0%, #e8eef7 100%);
-  --color-bg-secondary: #ffffff;
-  --color-bg-tertiary: #f8f9fc;
+  /* Light Mode - Soft Lavender Theme */
+  --color-bg-primary: #f8f7fc;
+  --color-bg-secondary: #f0edf7;
+  --color-bg-tertiary: #e8e4f3;
   
   --color-accent-primary: #7c3aed;
   --color-accent-secondary: #6366f1;
@@ -47,7 +47,7 @@
   --color-text-secondary: #475569;
   --color-text-tertiary: #64748b;
 
-  --color-border: #e2e8f0;
+  --color-border: #d4c5f9;
   
   /* Syntax Highlighting */
   --sh-keyword: #db2777;
@@ -104,7 +104,7 @@ code, pre {
 }
 
 [data-theme="light"] .glass-panel {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(248, 247, 252, 0.85);
   backdrop-filter: blur(16px);
   border: 1px solid rgba(124, 58, 237, 0.15);
   box-shadow: 0 4px 20px rgba(124, 58, 237, 0.08);

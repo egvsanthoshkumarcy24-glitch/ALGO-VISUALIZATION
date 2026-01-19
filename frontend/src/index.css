@@ -31,10 +31,10 @@
 }
 
 [data-theme="light"] {
-  /* Light Mode - Warm Lavender Theme */
-  --color-bg-primary: #faf8ff;
-  --color-bg-secondary: #f3eeff;
-  --color-bg-tertiary: #ebe4ff;
+  /* Light Mode - Rich Lavender Theme */
+  --color-bg-primary: #f0e6ff;
+  --color-bg-secondary: #e8d9ff;
+  --color-bg-tertiary: #ddc7ff;
   
   --color-accent-primary: #7c3aed;
   --color-accent-secondary: #6366f1;

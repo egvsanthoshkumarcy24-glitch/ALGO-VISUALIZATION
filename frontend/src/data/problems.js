@@ -88,6 +88,13 @@ int main() {
         title: 'Selection Sort',
         category: CATEGORIES.SORTING,
         difficulty: 'Easy',
+        beginnerTips: [
+            "Find the smallest element in the unsorted portion",
+            "Swap it with the first unsorted element",
+            "Move the boundary of sorted/unsorted portions",
+            "Repeat until entire array is sorted",
+            "Each pass guarantees one more element in its final position"
+        ],
         timeComplexity: "O(n²)",
         spaceComplexity: "O(1)",
         description: 'Repeatedly find the minimum element from the unsorted part and put it at the beginning.',
@@ -100,6 +107,49 @@ int main() {
         swap(&arr[min_idx], &arr[i]);
     }
 }`,
+        fullCode: `#include <stdio.h>
+#include <stdlib.h>
+
+void swap(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void selectionSort(int arr[], int n) {
+    // One by one move boundary of unsorted subarray
+    for (int i = 0; i < n - 1; i++) {
+        // Find the minimum element in unsorted array
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+        
+        // Swap the found minimum element with the first element
+        if (min_idx != i) {
+            swap(&arr[min_idx], &arr[i]);
+        }
+    }
+}
+
+int main() {
+    int arr[] = {64, 25, 12, 22, 11};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    
+    printf("Original array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    selectionSort(arr, n);
+    
+    printf("\nSorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    return 0;
+}`,
         inputs: [
             { name: "nums", label: "Array to Sort", type: "array", defaultValue: "64, 25, 12, 22, 11" }
         ],
@@ -110,6 +160,13 @@ int main() {
         title: 'Insertion Sort',
         category: CATEGORIES.SORTING,
         difficulty: 'Easy',
+        beginnerTips: [
+            "Start from second element (assume first is sorted)",
+            "Pick current element as 'key'",
+            "Compare key with elements before it",
+            "Shift larger elements one position right",
+            "Insert key in its correct position"
+        ],
         timeComplexity: "O(n²)",
         spaceComplexity: "O(1)",
         description: 'Build the sorted array one item at a time by repeatedly picking the next element and inserting it into the correct position.',
@@ -123,6 +180,43 @@ int main() {
         }
         arr[j + 1] = key;
     }
+}`,
+        fullCode: `#include <stdio.h>
+#include <stdlib.h>
+
+void insertionSort(int arr[], int n) {
+    // Start from second element (index 1)
+    for (int i = 1; i < n; i++) {
+        // Store current element as key
+        int key = arr[i];
+        int j = i - 1;
+        
+        // Move elements greater than key one position ahead
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        
+        // Insert key at its correct position
+        arr[j + 1] = key;
+    }
+}
+
+int main() {
+    int arr[] = {12, 11, 13, 5, 6};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    
+    printf("Original array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    insertionSort(arr, n);
+    
+    printf("\nSorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    return 0;
 }`,
         inputs: [
             { name: "nums", label: "Array to Sort", type: "array", defaultValue: "12, 11, 13, 5, 6" }
@@ -340,6 +434,13 @@ int main() {
         title: 'Randomized Quick Sort',
         category: CATEGORIES.SORTING,
         difficulty: 'Medium',
+        beginnerTips: [
+            "Similar to Quick Sort but with random pivot",
+            "Random pivot helps avoid worst-case scenarios",
+            "Better average performance on pre-sorted data",
+            "Same partitioning logic as regular Quick Sort",
+            "Randomization provides probabilistic guarantee"
+        ],
         timeComplexity: "O(n log n)",
         spaceComplexity: "O(log n)",
         description: 'Quick Sort using a random element as the pivot.',
@@ -348,6 +449,59 @@ int main() {
     int random = low + rand() % (high - low);
     swap(&arr[random], &arr[high]);
     // Standard partition...
+}`,
+        fullCode: `#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void swap(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int partition(int arr[], int low, int high) {
+    // Pick a random element as pivot
+    srand(time(NULL));
+    int random = low + rand() % (high - low + 1);
+    swap(&arr[random], &arr[high]);
+    
+    int pivot = arr[high];
+    int i = low - 1;
+    
+    for (int j = low; j < high; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return i + 1;
+}
+
+void randomizedQuickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        randomizedQuickSort(arr, low, pi - 1);
+        randomizedQuickSort(arr, pi + 1, high);
+    }
+}
+
+int main() {
+    int arr[] = {10, 7, 8, 9, 1, 5};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    
+    printf("Original array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    randomizedQuickSort(arr, 0, n - 1);
+    
+    printf("\nSorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    return 0;
 }`,
         inputs: [
             { name: "nums", label: "Array to Sort", type: "array", defaultValue: "10, 7, 8, 9, 1, 5" }
@@ -359,11 +513,74 @@ int main() {
         title: 'Counting Sort',
         category: CATEGORIES.SORTING,
         difficulty: 'Medium',
+        beginnerTips: [
+            "Works only for non-negative integers",
+            "Count how many times each number appears",
+            "Calculate cumulative counts",
+            "Place elements in output array using counts",
+            "Very fast but needs extra space"
+        ],
         timeComplexity: "O(n+k)",
         spaceComplexity: "O(k)",
         description: 'An integer sorting algorithm that counts the number of objects with distinct key values.',
         codeSnippet: `void countingSort(int arr[], int n) {
     // Logic to count occurrences and rebuild array
+}`,
+        fullCode: `#include <stdio.h>
+#include <stdlib.h>
+
+void countingSort(int arr[], int n) {
+    // Find the maximum element
+    int max = arr[0];
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > max)
+            max = arr[i];
+    }
+    
+    // Create count array and initialize to 0
+    int* count = (int*)calloc(max + 1, sizeof(int));
+    int* output = (int*)malloc(n * sizeof(int));
+    
+    // Store count of each element
+    for (int i = 0; i < n; i++) {
+        count[arr[i]]++;
+    }
+    
+    // Change count[i] so it contains actual position
+    for (int i = 1; i <= max; i++) {
+        count[i] += count[i - 1];
+    }
+    
+    // Build output array
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[arr[i]] - 1] = arr[i];
+        count[arr[i]]--;
+    }
+    
+    // Copy output to original array
+    for (int i = 0; i < n; i++) {
+        arr[i] = output[i];
+    }
+    
+    free(count);
+    free(output);
+}
+
+int main() {
+    int arr[] = {4, 2, 2, 8, 3, 3, 1};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    
+    printf("Original array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    countingSort(arr, n);
+    
+    printf("\nSorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    return 0;
 }`,
         inputs: [
             { name: "nums", label: "Array to Sort", type: "array", defaultValue: "4, 2, 2, 8, 3, 3, 1" }
@@ -375,6 +592,13 @@ int main() {
         title: 'Radix Sort',
         category: CATEGORIES.SORTING,
         difficulty: 'Medium',
+        beginnerTips: [
+            "Sort numbers digit by digit",
+            "Start from least significant digit (rightmost)",
+            "Use counting sort for each digit",
+            "Move to next more significant digit",
+            "Very efficient for large numbers"
+        ],
         timeComplexity: "O(nk)",
         spaceComplexity: "O(n+k)",
         description: 'Sorts integers by processing individual digits.',
@@ -382,6 +606,68 @@ int main() {
     int m = getMax(arr, n);
     for (int exp = 1; m / exp > 0; exp *= 10)
         countSort(arr, n, exp);
+}`,
+        fullCode: `#include <stdio.h>
+#include <stdlib.h>
+
+int getMax(int arr[], int n) {
+    int max = arr[0];
+    for (int i = 1; i < n; i++)
+        if (arr[i] > max)
+            max = arr[i];
+    return max;
+}
+
+void countSort(int arr[], int n, int exp) {
+    int* output = (int*)malloc(n * sizeof(int));
+    int count[10] = {0};
+    
+    // Store count of occurrences
+    for (int i = 0; i < n; i++)
+        count[(arr[i] / exp) % 10]++;
+    
+    // Change count[i] to actual position
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+    
+    // Build output array
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+    
+    // Copy to original array
+    for (int i = 0; i < n; i++)
+        arr[i] = output[i];
+    
+    free(output);
+}
+
+void radixSort(int arr[], int n) {
+    // Find maximum to know number of digits
+    int m = getMax(arr, n);
+    
+    // Do counting sort for every digit
+    // exp is 10^i where i is current digit number
+    for (int exp = 1; m / exp > 0; exp *= 10)
+        countSort(arr, n, exp);
+}
+
+int main() {
+    int arr[] = {170, 45, 75, 90, 802, 24, 2, 66};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    
+    printf("Original array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    radixSort(arr, n);
+    
+    printf("\nSorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    return 0;
 }`,
         inputs: [
             { name: "nums", label: "Array to Sort", type: "array", defaultValue: "170, 45, 75, 90, 802, 24, 2, 66" }
@@ -512,6 +798,13 @@ for(int i=0; i<n-2; i++) {
         title: "Valid Parentheses",
         category: CATEGORIES.STACK,
         difficulty: "Easy",
+        beginnerTips: [
+            "Use a stack to track opening brackets",
+            "Push opening brackets onto stack",
+            "For closing brackets, check if they match top of stack",
+            "Pop from stack when brackets match",
+            "At the end, stack should be empty"
+        ],
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
         description: "Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.",
@@ -527,6 +820,76 @@ for(int i=0; i<n-2; i++) {
         }
     }
     return isEmpty();
+}`,
+        fullCode: `#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define MAX_SIZE 10000
+
+typedef struct {
+    char data[MAX_SIZE];
+    int top;
+} Stack;
+
+void initStack(Stack* s) {
+    s->top = -1;
+}
+
+bool isEmpty(Stack* s) {
+    return s->top == -1;
+}
+
+void push(Stack* s, char c) {
+    s->data[++s->top] = c;
+}
+
+char pop(Stack* s) {
+    return s->data[s->top--];
+}
+
+char peek(Stack* s) {
+    return s->data[s->top];
+}
+
+bool isValid(char* s) {
+    Stack stack;
+    initStack(&stack);
+    
+    for (int i = 0; s[i] != '\0'; i++) {
+        char c = s[i];
+        
+        // Push opening brackets
+        if (c == '(' || c == '{' || c == '[') {
+            push(&stack, c);
+        }
+        // Check closing brackets
+        else {
+            if (isEmpty(&stack)) return false;
+            
+            char top = peek(&stack);
+            if ((c == ')' && top == '(') ||
+                (c == '}' && top == '{') ||
+                (c == ']' && top == '[')) {
+                pop(&stack);
+            } else {
+                return false;
+            }
+        }
+    }
+    
+    return isEmpty(&stack);
+}
+
+int main() {
+    char s[] = "()[]{}";
+    
+    if (isValid(s))
+        printf("%s is valid\n", s);
+    else
+        printf("%s is not valid\n", s);
+    
+    return 0;
 }`,
         inputs: [
             { name: "s", label: "Input String", type: "text", defaultValue: "()[]{}" }
@@ -665,8 +1028,58 @@ int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes
         title: 'Stack (Linked List)',
         category: CATEGORIES.LINKED_LIST,
         difficulty: 'Easy',
+        beginnerTips: [
+            "Stack follows Last-In-First-Out (LIFO) principle",
+            "Push adds element to top",
+            "Pop removes element from top",
+            "Peek shows top element without removing",
+            "Think of it like a stack of plates"
+        ],
         description: 'Implement a Stack using a Linked List (LIFO).',
         codeSnippet: `// Stack Operations using Linked List Node`,
+        fullCode: `#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+Node* top = NULL;
+
+void push(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = top;
+    top = newNode;
+    printf("Pushed: %d\\n", data);
+}
+
+int pop() {
+    if (top == NULL) {
+        printf("Stack underflow\\n");
+        return -1;
+    }
+    Node* temp = top;
+    int popped = temp->data;
+    top = top->next;
+    free(temp);
+    return popped;
+}
+
+int peek() {
+    if (top == NULL) return -1;
+    return top->data;
+}
+
+int main() {
+    push(10);
+    push(20);
+    push(30);
+    printf("Top: %d\\n", peek());
+    printf("Popped: %d\\n", pop());
+    return 0;
+}`,
         inputs: [
             { name: "nums", label: "Push Elements", type: "array", defaultValue: "1, 2, 3, 4" }
         ],
@@ -677,8 +1090,59 @@ int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes
         title: 'Queue (Linked List)',
         category: CATEGORIES.LINKED_LIST,
         difficulty: 'Easy',
+        beginnerTips: [
+            "Queue follows First-In-First-Out (FIFO) principle",
+            "Enqueue adds element to rear",
+            "Dequeue removes element from front",
+            "Front shows first element",
+            "Think of it like a line at a store"
+        ],
         description: 'Implement a Queue using a Linked List (FIFO).',
         codeSnippet: `// Queue Operations using Linked List Node`,
+        fullCode: `#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+Node* front = NULL;
+Node* rear = NULL;
+
+void enqueue(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    if (rear == NULL) {
+        front = rear = newNode;
+    } else {
+        rear->next = newNode;
+        rear = newNode;
+    }
+    printf("Enqueued: %d\\n", data);
+}
+
+int dequeue() {
+    if (front == NULL) {
+        printf("Queue underflow\\n");
+        return -1;
+    }
+    Node* temp = front;
+    int dequeued = temp->data;
+    front = front->next;
+    if (front == NULL) rear = NULL;
+    free(temp);
+    return dequeued;
+}
+
+int main() {
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
+    printf("Dequeued: %d\\n", dequeue());
+    return 0;
+}`,
         inputs: [
             { name: "nums", label: "Enqueue Elements", type: "array", defaultValue: "1, 2, 3, 4" }
         ],
@@ -689,12 +1153,72 @@ int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes
         title: 'Doubly Linked List',
         category: CATEGORIES.LINKED_LIST,
         difficulty: 'Medium',
+        beginnerTips: [
+            "Each node has two pointers: next and prev",
+            "Can traverse in both directions",
+            "Insert/delete at both ends efficiently",
+            "Head points to first, tail to last",
+            "Useful for browser history, undo/redo"
+        ],
         description: 'A linked list where each node contains a reference to the previous node as well.',
         codeSnippet: `struct Node {
     int data;
     struct Node* next;
     struct Node* prev;
 };`,
+        fullCode: `#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+    struct Node* prev;
+} Node;
+
+Node* head = NULL;
+
+void insertFront(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = head;
+    newNode->prev = NULL;
+    if (head != NULL)
+        head->prev = newNode;
+    head = newNode;
+}
+
+void insertEnd(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    if (head == NULL) {
+        newNode->prev = NULL;
+        head = newNode;
+        return;
+    }
+    Node* temp = head;
+    while (temp->next != NULL)
+        temp = temp->next;
+    temp->next = newNode;
+    newNode->prev = temp;
+}
+
+void display() {
+    Node* temp = head;
+    while (temp != NULL) {
+        printf("%d <-> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    insertEnd(10);
+    insertEnd(20);
+    insertFront(5);
+    display();
+    return 0;
+}`,
         inputs: [
             { name: "nums", label: "List Elements", type: "array", defaultValue: "10, 20, 30, 40" }
         ],
@@ -705,8 +1229,75 @@ int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes
         title: 'Deque (Linked List)',
         category: CATEGORIES.LINKED_LIST,
         difficulty: 'Medium',
+        beginnerTips: [
+            "Double-ended queue (deque = 'deck')",
+            "Insert and remove from both ends",
+            "More flexible than regular queue",
+            "Useful for sliding window problems",
+            "Can act as both stack and queue"
+        ],
         description: 'Double Ended Queue allowing insertion and deletion at both ends.',
         codeSnippet: `// Deque Operations`,
+        fullCode: `#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+    struct Node* prev;
+} Node;
+
+Node* front = NULL;
+Node* rear = NULL;
+
+void insertFront(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->prev = NULL;
+    newNode->next = front;
+    if (front == NULL) {
+        front = rear = newNode;
+        newNode->prev = NULL;
+    } else {
+        front->prev = newNode;
+        front = newNode;
+    }
+    printf("Inserted %d at front\n", data);
+}
+
+void insertRear(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    if (rear == NULL) {
+        newNode->prev = NULL;
+        front = rear = newNode;
+    } else {
+        newNode->prev = rear;
+        rear->next = newNode;
+        rear = newNode;
+    }
+    printf("Inserted %d at rear\n", data);
+}
+
+int deleteFront() {
+    if (front == NULL) return -1;
+    int data = front->data;
+    Node* temp = front;
+    front = front->next;
+    if (front == NULL) rear = NULL;
+    else front->prev = NULL;
+    free(temp);
+    return data;
+}
+
+int main() {
+    insertRear(5);
+    insertRear(10);
+    insertFront(1);
+    printf("Deleted from front: %d\n", deleteFront());
+    return 0;
+}`,
         inputs: [
             { name: "nums", label: "Elements", type: "array", defaultValue: "5, 10, 15, 20" }
         ],
@@ -717,10 +1308,47 @@ int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes
         title: 'Factorial (Recursion)',
         category: CATEGORIES.RECURSION,
         difficulty: 'Easy',
+        beginnerTips: [
+            "Factorial of n = n × (n-1) × (n-2) × ... × 1",
+            "Base case: factorial of 0 or 1 is 1",
+            "Recursive case: n × factorial(n-1)",
+            "Function calls itself with smaller input",
+            "Stack builds up then unwinds with results"
+        ],
         description: 'Calculate N! recursively.',
         codeSnippet: `int factorial(int n) {
     if (n <= 1) return 1;
     return n * factorial(n-1);
+}`,
+        fullCode: `#include <stdio.h>
+
+int factorial(int n) {
+    // Base case
+    if (n <= 1) {
+        return 1;
+    }
+    // Recursive case
+    return n * factorial(n - 1);
+}
+
+int main() {
+    int n = 5;
+    printf("Factorial of %d = %d\n", n, factorial(n));
+    
+    // Show step by step
+    printf("\nStep by step:\n");
+    printf("5! = 5 × 4!\n");
+    printf("4! = 4 × 3!\n");
+    printf("3! = 3 × 2!\n");
+    printf("2! = 2 × 1!\n");
+    printf("1! = 1 (base case)\n");
+    printf("\nUnwinding:\n");
+    printf("2! = 2 × 1 = 2\n");
+    printf("3! = 3 × 2 = 6\n");
+    printf("4! = 4 × 6 = 24\n");
+    printf("5! = 5 × 24 = 120\n");
+    
+    return 0;
 }`,
         inputs: [
             { name: "n", label: "N", type: "number", defaultValue: "5" }
@@ -732,13 +1360,51 @@ int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes
         title: 'Fibonacci (Recursion)',
         category: CATEGORIES.RECURSION,
         difficulty: 'Easy',
+        beginnerTips: [
+            "Fibonacci: 0, 1, 1, 2, 3, 5, 8, 13, 21...",
+            "Each number is sum of previous two",
+            "Base cases: fib(0)=0, fib(1)=1",
+            "Recursive: fib(n) = fib(n-1) + fib(n-2)",
+            "Creates a tree of recursive calls"
+        ],
         description: 'Calculate Nth Fibonacci number recursively.',
         codeSnippet: `int fib(int n) {
     if (n <= 1) return n;
     return fib(n-1) + fib(n-2);
 }`,
+        fullCode: `#include <stdio.h>
+
+int fib(int n) {
+    // Base cases
+    if (n <= 1) {
+        return n;
+    }
+    // Recursive case
+    return fib(n - 1) + fib(n - 2);
+}
+
+int main() {
+    int n = 6;
+    printf("Fibonacci(%d) = %d\n", n, fib(n));
+    
+    printf("\nFibonacci sequence:\n");
+    for (int i = 0; i <= n; i++) {
+        printf("fib(%d) = %d\n", i, fib(i));
+    }
+    
+    printf("\nHow it works:\n");
+    printf("fib(6) = fib(5) + fib(4)\n");
+    printf("fib(5) = fib(4) + fib(3)\n");
+    printf("fib(4) = fib(3) + fib(2)\n");
+    printf("fib(3) = fib(2) + fib(1)\n");
+    printf("fib(2) = fib(1) + fib(0)\n");
+    printf("fib(1) = 1 (base case)\n");
+    printf("fib(0) = 0 (base case)\n");
+    
+    return 0;
+}`,
         inputs: [
-            { name: "n", label: "N", type: "number", defaultValue: "4" }
+            { name: "n", label: "N", type: "number", defaultValue: "6" }
         ],
         runCommand: 'recursion_fib'
     }

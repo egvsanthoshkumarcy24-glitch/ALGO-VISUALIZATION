@@ -418,6 +418,68 @@ export function InterviewMode({ problem, onBack }) {
                             )}
                         </div>
                     </div>
+
+                    {/* Step-by-Step Learning Tips */}
+                    {problem.beginnerTips && (
+                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-5 rounded-xl border-2 border-green-300/50 dark:border-green-700/50 space-y-3">
+                            <h3 className="text-sm font-bold tracking-wide text-green-800 dark:text-green-300 flex items-center gap-2">
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd"/>
+                                </svg>
+                                Step-by-Step Learning Guide
+                            </h3>
+                            <div className="space-y-2">
+                                {problem.beginnerTips.map((tip, idx) => (
+                                    <div key={idx} className="flex items-start gap-3 text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 dark:bg-green-500/30 border border-green-500/50 flex items-center justify-center">
+                                            <span className="text-[10px] font-bold text-green-700 dark:text-green-400">{idx + 1}</span>
+                                        </div>
+                                        <span className="flex-1 pt-0.5">{tip}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="pt-2 border-t border-green-300/30 dark:border-green-700/30">
+                                <p className="text-xs text-green-700 dark:text-green-300 font-medium flex items-center gap-1">
+                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                                    </svg>
+                                    Follow these steps while watching the visualization!
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Quick Terms Glossary */}
+                    <div className="bg-[var(--color-bg-primary)] p-5 rounded-xl border border-[var(--color-border)] space-y-3">
+                        <h3 className="text-sm font-bold tracking-wide text-[var(--color-text-primary)] flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                            </svg>
+                            Quick Terms
+                        </h3>
+                        <div className="space-y-2 text-xs text-[var(--color-text-secondary)]">
+                            <div className="flex flex-col gap-1">
+                                <span className="font-semibold text-[var(--color-accent-primary)]">O(n)</span>
+                                <span className="leading-relaxed">Big-O notation - describes how fast an algorithm runs</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <span className="font-semibold text-[var(--color-accent-primary)]">Comparison</span>
+                                <span className="leading-relaxed">Checking if one element is bigger/smaller than another</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <span className="font-semibold text-[var(--color-accent-primary)]">Swap</span>
+                                <span className="leading-relaxed">Exchanging positions of two elements</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <span className="font-semibold text-[var(--color-accent-primary)]">Index</span>
+                                <span className="leading-relaxed">Position number of an element (starts at 0)</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <span className="font-semibold text-[var(--color-accent-primary)]">Iteration</span>
+                                <span className="leading-relaxed">One pass through a loop or set of elements</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </aside>
 
@@ -444,9 +506,28 @@ export function InterviewMode({ problem, onBack }) {
                 </header>
 
                 {/* Canvas */}
-                <div className={`flex-1 p-8 flex items-center justify-center bg-gradient-to-br from-[var(--color-bg-secondary)] via-[var(--color-bg-primary)] to-[var(--color-bg-secondary)] relative overflow-hidden`}>
+                <div className={`flex-1 p-8 flex flex-col items-center justify-center bg-gradient-to-br from-[var(--color-bg-secondary)] via-[var(--color-bg-primary)] to-[var(--color-bg-secondary)] relative overflow-hidden`}>
                     {/* Background decoration */}
                     <div className={`absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] ${isDark ? 'opacity-[0.03]' : 'opacity-[0.02]'} pointer-events-none`}></div>
+
+                    {/* Current Step Explanation */}
+                    {!isLoading && !error && logs.length > 0 && logs[currentStep]?.message && (
+                        <div className="z-20 w-full max-w-4xl mb-4 animate-fade-in">
+                            <div className={`glass-panel px-6 py-4 rounded-xl border-2 ${isDark ? 'border-purple-500/30 bg-purple-500/5' : 'border-purple-300/50 bg-purple-50/50'} backdrop-blur-md`}>
+                                <div className="flex items-start gap-3">
+                                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)] flex items-center justify-center shadow-lg">
+                                        <span className="text-white font-bold text-sm">{currentStep + 1}</span>
+                                    </div>
+                                    <div className="flex-1">
+                                        <h4 className="text-xs uppercase tracking-wider text-[var(--color-accent-primary)] font-bold mb-1">What's Happening Now</h4>
+                                        <p className="text-sm text-[var(--color-text-primary)] leading-relaxed font-medium">
+                                            {logs[currentStep].message}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="z-10 w-full max-w-4xl flex items-center justify-center">
                         {isLoading ? (

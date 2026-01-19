@@ -19,6 +19,13 @@ export const PROBLEMS = [
         title: 'Bubble Sort',
         category: CATEGORIES.SORTING,
         difficulty: 'Easy',
+        beginnerTips: [
+            "Start by comparing the first two elements",
+            "If they're in wrong order, swap them",
+            "Move to the next pair and repeat",
+            "After each full pass, the largest element reaches its final position",
+            "Continue until no more swaps are needed"
+        ],
         timeComplexity: "O(n²)",
         spaceComplexity: "O(1)",
         description: 'Repeatedly swap adjacent elements if they are in the wrong order.',
@@ -127,6 +134,13 @@ int main() {
         title: 'Merge Sort',
         category: CATEGORIES.SORTING,
         difficulty: 'Medium',
+        beginnerTips: [
+            "Split the array in half repeatedly until you have single elements",
+            "Single elements are already 'sorted'",
+            "Merge pairs of sorted arrays back together in order",
+            "Keep merging until you have one fully sorted array",
+            "Think of it like organizing cards: spread them out, then collect them in order"
+        ],
         timeComplexity: "O(n log n)",
         spaceComplexity: "O(n)",
         description: 'Divide the array into halves, sort them, and then merge the sorted halves. A classic divide-and-conquer algorithm.',
@@ -234,6 +248,13 @@ int main() {
         title: 'Quick Sort',
         category: CATEGORIES.SORTING,
         difficulty: 'Medium',
+        beginnerTips: [
+            "Choose a 'pivot' element (usually the last one)",
+            "Move all smaller elements to the left of pivot",
+            "Move all larger elements to the right of pivot",
+            "Now the pivot is in its correct final position!",
+            "Repeat this process on left and right sides"
+        ],
         timeComplexity: "O(n log n)",
         spaceComplexity: "O(log n)",
         description: 'Pick a pivot element and partition the array around it, then recursively sort the partitions. Efficient in-place sorting algorithm.',
@@ -372,6 +393,13 @@ int main() {
         title: "Binary Search",
         category: CATEGORIES.SORTING,
         difficulty: "Easy",
+        beginnerTips: [
+            "Array MUST be sorted first - binary search won't work on unsorted data",
+            "Start by looking at the middle element",
+            "Is middle element your target? Done!",
+            "Target smaller? Search the left half. Target bigger? Search the right half",
+            "Repeat until found (or search space becomes empty)"
+        ],
         timeComplexity: "O(log n)",
         spaceComplexity: "O(1)",
         description: "Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums. If target exists, return its index. Otherwise, return -1.",

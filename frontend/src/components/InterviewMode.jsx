@@ -177,9 +177,9 @@ export function InterviewMode({ problem, onBack }) {
                         <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
                             {problem.description}
                         </p>
-                        <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800/50 rounded-lg p-3">
-                            <p className="text-xs text-blue-900 dark:text-blue-200 leading-relaxed flex items-start gap-2">
-                                <span className="text-blue-600 dark:text-blue-400 text-sm">ℹ️</span>
+                        <div className="bg-[var(--color-accent-cyan)]/5 border border-[var(--color-accent-cyan)]/30 rounded-lg p-3">
+                            <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed flex items-start gap-2">
+                                <span className="text-[var(--color-accent-cyan)] text-sm">ℹ️</span>
                                 <span>
                                     {problem.id === 'bubble_sort' && "Great for beginners! Bubble sort is simple to understand but slow for large datasets. Best used for teaching purposes."}
                                     {problem.id === 'merge_sort' && "One of the most efficient sorting algorithms! Always runs in O(n log n) time, making it reliable for large datasets."}
@@ -240,7 +240,7 @@ export function InterviewMode({ problem, onBack }) {
                             <Button
                                 onClick={() => handleRun()}
                                 disabled={isLoading}
-                                className="w-full justify-center mt-2 bg-[var(--color-accent-primary)] hover:bg-blue-600 text-white border-0"
+                                className="w-full justify-center mt-2 bg-[var(--color-accent-primary)] hover:bg-[var(--color-accent-hover)] text-white border-0"
                             >
                                 {isLoading ? <Loader2 size={16} className="animate-spin mr-2" /> : <Play size={16} className="mr-2 fill-current" />}
                                 Visualize
@@ -312,26 +312,26 @@ export function InterviewMode({ problem, onBack }) {
                     </div>
 
                     {/* Key Concepts - Algorithm Specific */}
-                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 p-5 rounded-xl border-2 border-amber-300/50 dark:border-amber-700/50 space-y-3">
-                        <h3 className="text-sm font-bold tracking-wide text-amber-800 dark:text-amber-300 flex items-center gap-2">
+                    <div className="bg-gradient-to-br from-[var(--color-accent-pink)]/5 to-[var(--color-accent-cyan)]/5 p-5 rounded-xl border-2 border-[var(--color-accent-pink)]/30 space-y-3">
+                        <h3 className="text-sm font-bold tracking-wide text-[var(--color-accent-pink)] flex items-center gap-2">
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                             </svg>
                             What to Watch For
                         </h3>
-                        <div className="space-y-2 text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                        <div className="space-y-2 text-xs text-[var(--color-text-secondary)] leading-relaxed">
                             {problem.id === 'bubble_sort' && (
                                 <>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🔄</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">🔄</span>
                                         <span><strong>Multiple passes:</strong> Notice how the algorithm makes several passes through the array</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">⬆️</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">⬆️</span>
                                         <span><strong>Bubbling up:</strong> Watch how the largest element "bubbles" to the end in each pass</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🔁</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">🔁</span>
                                         <span><strong>Adjacent comparisons:</strong> Elements are only compared with their immediate neighbors</span>
                                     </p>
                                 </>
@@ -339,15 +339,15 @@ export function InterviewMode({ problem, onBack }) {
                             {problem.id === 'merge_sort' && (
                                 <>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">✂️</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">✂️</span>
                                         <span><strong>Divide phase:</strong> Watch how the array splits into smaller and smaller pieces</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🔀</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">🔀</span>
                                         <span><strong>Merge phase:</strong> See how sorted pieces combine back together in order</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">📊</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">📊</span>
                                         <span><strong>Recursion tree:</strong> Each level represents a recursion depth (splits then merges)</span>
                                     </p>
                                 </>
@@ -355,15 +355,15 @@ export function InterviewMode({ problem, onBack }) {
                             {problem.id === 'quick_sort' && (
                                 <>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🎯</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">🎯</span>
                                         <span><strong>Pivot selection:</strong> One element is chosen as the "pivot" (usually the last element)</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">⚖️</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">⚖️</span>
                                         <span><strong>Partitioning:</strong> Elements smaller than pivot go left, larger go right</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🔄</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">🔄</span>
                                         <span><strong>Recursive sorting:</strong> Each partition is then sorted the same way</span>
                                     </p>
                                 </>
@@ -371,15 +371,15 @@ export function InterviewMode({ problem, onBack }) {
                             {problem.id === 'binary_search' && (
                                 <>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">📍</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">📍</span>
                                         <span><strong>Middle element:</strong> Always check the middle element first</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">✂️</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">✂️</span>
                                         <span><strong>Halving:</strong> Search space is cut in half after each comparison</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">⚡</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">⚡</span>
                                         <span><strong>Speed advantage:</strong> Notice how few steps it takes compared to linear search</span>
                                     </p>
                                 </>
@@ -387,15 +387,15 @@ export function InterviewMode({ problem, onBack }) {
                             {(problem.id === 'bfs' || problem.id === 'dfs') && (
                                 <>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🌳</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">🌳</span>
                                         <span><strong>Traversal order:</strong> Watch the sequence nodes are visited</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🎯</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">🎯</span>
                                         <span><strong>Discovery:</strong> Notice when each node is first discovered vs fully explored</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">📊</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">📊</span>
                                         <span><strong>{problem.id === 'bfs' ? 'Level by level' : 'Depth first'}:</strong> {problem.id === 'bfs' ? 'Goes through all neighbors before going deeper' : 'Goes as deep as possible before backtracking'}</span>
                                     </p>
                                 </>
@@ -403,15 +403,15 @@ export function InterviewMode({ problem, onBack }) {
                             {!['bubble_sort', 'merge_sort', 'quick_sort', 'binary_search', 'bfs', 'dfs'].includes(problem.id) && (
                                 <>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">👀</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">👀</span>
                                         <span><strong>Watch carefully:</strong> Observe how elements are compared and moved</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">🔍</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">🔍</span>
                                         <span><strong>Pattern recognition:</strong> Try to identify the strategy the algorithm uses</span>
                                     </p>
                                     <p className="flex items-start gap-2">
-                                        <span className="text-amber-600 dark:text-amber-400 font-bold">⏸️</span>
+                                        <span className="text-[var(--color-accent-pink)] font-bold">⏸️</span>
                                         <span><strong>Use pause:</strong> Pause at any step to study what's happening</span>
                                     </p>
                                 </>
@@ -437,14 +437,14 @@ export function InterviewMode({ problem, onBack }) {
                             </div>
                         ) : (
                             <div className="font-mono text-sm text-[var(--color-text-secondary)] bg-[var(--color-bg-tertiary)] px-3 py-1 rounded-md border border-[var(--color-border)]">
-                                Step <span className={isDark ? "text-white" : "text-[var(--color-text-primary)]"} >{currentStep + 1}</span> / {logs.length}
+                                Step <span className="text-[var(--color-text-primary)]">{currentStep + 1}</span> / {logs.length}
                             </div>
                         )}
                     </div>
                 </header>
 
                 {/* Canvas */}
-                <div className={`flex-1 p-8 flex items-center justify-center ${isDark ? 'bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#161b22] via-[#0f1115] to-[#0f1115]' : 'bg-gradient-to-br from-[var(--color-bg-primary)] via-[var(--color-bg-secondary)] to-[var(--color-bg-primary)]'} relative overflow-hidden`}>
+                <div className={`flex-1 p-8 flex items-center justify-center bg-gradient-to-br from-[var(--color-bg-secondary)] via-[var(--color-bg-primary)] to-[var(--color-bg-secondary)] relative overflow-hidden`}>
                     {/* Background decoration */}
                     <div className={`absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] ${isDark ? 'opacity-[0.03]' : 'opacity-[0.02]'} pointer-events-none`}></div>
 
@@ -467,10 +467,10 @@ export function InterviewMode({ problem, onBack }) {
                 {/* Playback Controls */}
                 <footer className="h-24 border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)]/50 backdrop-blur-md flex items-center justify-center gap-8 relative z-20">
                     <div className={`flex items-center gap-6 glass-panel px-8 py-3 rounded-2xl transition-opacity duration-300 ${isLoading || error || logs.length === 0 ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
-                        <Button variant="ghost" onClick={handleReset} title="Reset" className="hover:bg-white/10">
+                        <Button variant="ghost" onClick={handleReset} title="Reset" className="hover:bg-[var(--color-bg-tertiary)]">
                             <RefreshCw size={20} />
                         </Button>
-                        <Button variant="ghost" onClick={handlePrev} disabled={currentStep === 0} className="hover:bg-white/10">
+                        <Button variant="ghost" onClick={handlePrev} disabled={currentStep === 0} className="hover:bg-[var(--color-bg-tertiary)]">
                             <SkipBack size={24} fill="currentColor" />
                         </Button>
                         <Button
@@ -480,7 +480,7 @@ export function InterviewMode({ problem, onBack }) {
                         >
                             {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" className="ml-1" />}
                         </Button>
-                        <Button variant="ghost" onClick={handleNext} disabled={currentStep === logs.length - 1} className="hover:bg-white/10">
+                        <Button variant="ghost" onClick={handleNext} disabled={currentStep === logs.length - 1} className="hover:bg-[var(--color-bg-tertiary)]">
                             <SkipForward size={24} fill="currentColor" />
                         </Button>
                     </div>

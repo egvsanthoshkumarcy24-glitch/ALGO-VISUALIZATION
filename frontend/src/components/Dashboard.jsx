@@ -34,7 +34,7 @@ export function Dashboard({ onSelectProblem }) {
 
             {/* Hero Section */}
             <div className="relative pt-32 pb-20 px-6 overflow-hidden">
-                <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-[var(--color-accent-primary)] ${isDark ? 'opacity-[0.03]' : 'opacity-[0.08]'} blur-[120px] rounded-full pointer-events-none`} />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-r from-[var(--color-accent-primary)] via-[var(--color-accent-secondary)] to-[var(--color-accent-pink)] opacity-[0.08] blur-[120px] rounded-full pointer-events-none" />
 
                 <div className="max-w-5xl mx-auto text-center relative z-10">
                     <motion.div
@@ -42,13 +42,23 @@ export function Dashboard({ onSelectProblem }) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h1 className={`text-6xl md:text-7xl font-extrabold tracking-tight mb-6 ${isDark ? 'bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-200 to-gray-500' : 'text-[var(--color-text-primary)]'}`}>
-                            Master <span className="text-[var(--color-accent-primary)]">Algorithms</span>
+                        <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight mb-6">
+                            <span className="bg-gradient-to-br from-[var(--color-text-primary)] via-purple-300 to-blue-300 bg-clip-text text-transparent">
+                                Master{' '}
+                            </span>
+                            <span className="bg-gradient-to-r from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)] bg-clip-text text-transparent">
+                                Algorithms
+                            </span>
                         </h1>
                         <p className="text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto leading-relaxed">
-                            Visualize, understand, and conquer standard interview problems with
-                            <span className="text-[var(--color-text-primary)] font-medium"> interactive step-by-step executions</span>.
+                            Visualize, understand, and conquer coding interview problems with
+                            <span className="text-[var(--color-accent-primary)] font-semibold"> interactive step-by-step executions</span>.
                         </p>
+                        <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
+                            <span className="px-3 py-1 bg-[var(--color-accent-green)]/10 text-[var(--color-accent-green)] rounded-full border border-[var(--color-accent-green)]/20 font-medium">✓ Beginner Friendly</span>
+                            <span className="px-3 py-1 bg-[var(--color-accent-cyan)]/10 text-[var(--color-accent-cyan)] rounded-full border border-[var(--color-accent-cyan)]/20 font-medium">⚡ Real-time Visualization</span>
+                            <span className="px-3 py-1 bg-[var(--color-accent-pink)]/10 text-[var(--color-accent-pink)] rounded-full border border-[var(--color-accent-pink)]/20 font-medium">💻 Full Code Examples</span>
+                        </div>
                     </motion.div>
                 </div>
             </div>

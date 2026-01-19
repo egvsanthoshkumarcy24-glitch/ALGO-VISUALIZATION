@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, Button } from './ui/common';
 import { VisualizerEngine } from './VisualizerEngine';
-import { Play, Pause, SkipBack, SkipForward, RefreshCw, ArrowLeft, Loader2, AlertCircle, Settings, Clock, Boxes } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, RefreshCw, ArrowLeft, Loader2, AlertCircle, Settings, Clock, Boxes, Code, ChevronDown, ChevronUp, Gauge } from 'lucide-react';
 
 export function InterviewMode({ problem, onBack }) {
     const [logs, setLogs] = useState([]);
@@ -9,6 +9,8 @@ export function InterviewMode({ problem, onBack }) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [speed, setSpeed] = useState(1); // 1x speed by default
+    const [showFullCode, setShowFullCode] = useState(false);
     const [theme, setTheme] = useState(() => {
         if (typeof window !== 'undefined') {
             return document.documentElement.getAttribute('data-theme') || 'dark';
@@ -45,8 +47,21 @@ export function InterviewMode({ problem, onBack }) {
         }
     }, [problem.id]);
 
-    // Speed constants
-    const STEP_DELAY = 1000;
+    useEffect(() => {
+        if (isPlaying && !isLoading && !error && logs.length > 0) {
+            const delay = 1000 / speed; // Speed multiplier affects delay
+            timerRef.current = setInterval(() => {
+                setCurrentStep(prev => {
+                    if (prev < logs.length - 1) return prev + 1;
+                    setIsPlaying(false);
+                    return prev;
+                });
+            }, delay);
+        } else {
+            clearInterval(timerRef.current);
+        }
+        return () => clearInterval(timerRef.current);
+    }, [isPlaying, logs.length, isLoading, error, speed]);
 
     const handleRun = async (values = inputValues) => {
         setIsLoading(true);
@@ -102,21 +117,6 @@ export function InterviewMode({ problem, onBack }) {
             setIsLoading(false);
         }
     };
-
-    useEffect(() => {
-        if (isPlaying && !isLoading && !error && logs.length > 0) {
-            timerRef.current = setInterval(() => {
-                setCurrentStep(prev => {
-                    if (prev < logs.length - 1) return prev + 1;
-                    setIsPlaying(false);
-                    return prev;
-                });
-            }, STEP_DELAY);
-        } else {
-            clearInterval(timerRef.current);
-        }
-        return () => clearInterval(timerRef.current);
-    }, [isPlaying, logs.length, isLoading, error]);
 
     const handleNext = () => {
         setIsPlaying(false);
@@ -230,9 +230,65 @@ export function InterviewMode({ problem, onBack }) {
                     {/* Code Snippet */}
                     <div>
                         <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">Solution Code</h3>
-                        <div className="bg-[var(--color-bg-primary)] p-4 rounded-xl border border-[var(--color-border)] font-mono text-xs overflow-auto leading-relaxed">
-                            <pre className="whitespace-pre">{problem.codeSnippet || "// Code coming soon..."}</pre>
+                        <div className="bg-[var(--color-bg-primary)] p-4 rounded-xl border border-[var(--color-border)] font-mono text-xs overflow-auto leading-relaxed max-h-48">
+                            <pre className="whitespace-pre text-[var(--color-text-primary)]">{problem.codeSnippet || "// Code coming soon..."}</pre>
                         </div>
+                    </div>
+
+                    {/* Full Implementation (Collapsible) */}
+                    {problem.fullCode && (
+                        <div>
+                            <button
+                                onClick={() => setShowFullCode(!showFullCode)}
+                                className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2 hover:text-[var(--color-accent-primary)] transition-colors"
+                            >
+                                <Code size={14} />
+                                Full C Implementation
+                                {showFullCode ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                            </button>
+                            {showFullCode && (
+                                <div className="bg-[var(--color-bg-primary)] p-4 rounded-xl border border-[var(--color-accent-primary)]/30 font-mono text-xs overflow-auto leading-relaxed max-h-96">
+                                    <pre className="whitespace-pre text-[var(--color-text-primary)]">{problem.fullCode}</pre>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Complexity Analysis */}
+                    {(problem.timeComplexity || problem.spaceComplexity) && (
+                        <div className="bg-[var(--color-bg-primary)] p-4 rounded-xl border border-[var(--color-border)]">
+                            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-3 flex items-center gap-2">
+                                <Clock size={14} />
+                                Complexity Analysis
+                            </h3>
+                            <div className="space-y-2 text-sm">
+                                {problem.timeComplexity && (
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[var(--color-text-secondary)]">Time:</span>
+                                        <code className="px-2 py-1 bg-[var(--color-bg-tertiary)] rounded text-[var(--color-accent-primary)] font-mono font-bold">{problem.timeComplexity}</code>
+                                    </div>
+                                )}
+                                {problem.spaceComplexity && (
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[var(--color-text-secondary)]">Space:</span>
+                                        <code className="px-2 py-1 bg-[var(--color-bg-tertiary)] rounded text-[var(--color-accent-cyan)] font-mono font-bold">{problem.spaceComplexity}</code>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Beginner's Guide */}
+                    <div className="bg-gradient-to-br from-[var(--color-accent-primary)]/10 to-[var(--color-accent-secondary)]/10 p-4 rounded-xl border border-[var(--color-accent-primary)]/20">
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-accent-primary)] mb-2 flex items-center gap-2">
+                            <Boxes size={14} />
+                            Beginner's Tip
+                        </h3>
+                        <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+                            Watch the visualization step-by-step to understand how the algorithm works. 
+                            Use the speed controls to slow down or speed up the execution. 
+                            Variables and array states are shown in real-time!
+                        </p>
                     </div>
                 </div>
             </aside>
@@ -281,7 +337,7 @@ export function InterviewMode({ problem, onBack }) {
                 </div>
 
                 {/* Playback Controls */}
-                <footer className="h-24 border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)]/50 backdrop-blur-md flex items-center justify-center relative z-20">
+                <footer className="h-24 border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)]/50 backdrop-blur-md flex items-center justify-center gap-8 relative z-20">
                     <div className={`flex items-center gap-6 glass-panel px-8 py-3 rounded-2xl transition-opacity duration-300 ${isLoading || error || logs.length === 0 ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
                         <Button variant="ghost" onClick={handleReset} title="Reset" className="hover:bg-white/10">
                             <RefreshCw size={20} />
@@ -292,13 +348,39 @@ export function InterviewMode({ problem, onBack }) {
                         <Button
                             variant="primary"
                             onClick={togglePlay}
-                            className="w-16 h-16 rounded-2xl !p-0 flex items-center justify-center text-white shadow-xl shadow-blue-500/20 hover:scale-105 active:scale-95 transition-all text-white"
+                            className="w-16 h-16 rounded-2xl !p-0 flex items-center justify-center text-white shadow-xl shadow-purple-500/20 hover:scale-105 active:scale-95 transition-all"
                         >
                             {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" className="ml-1" />}
                         </Button>
                         <Button variant="ghost" onClick={handleNext} disabled={currentStep === logs.length - 1} className="hover:bg-white/10">
                             <SkipForward size={24} fill="currentColor" />
                         </Button>
+                    </div>
+                    
+                    {/* Speed Control */}
+                    <div className={`flex flex-col gap-2 glass-panel px-6 py-3 rounded-2xl transition-opacity duration-300 ${isLoading || error || logs.length === 0 ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
+                        <div className="flex items-center gap-3">
+                            <Gauge size={16} className="text-[var(--color-accent-primary)]" />
+                            <span className="text-xs text-[var(--color-text-secondary)] font-medium min-w-[60px]">Speed: {speed}x</span>
+                            <input
+                                type="range"
+                                min="0.25"
+                                max="3"
+                                step="0.25"
+                                value={speed}
+                                onChange={(e) => setSpeed(parseFloat(e.target.value))}
+                                className="w-32 h-2 bg-[var(--color-bg-tertiary)] rounded-lg appearance-none cursor-pointer"
+                                style={{
+                                    background: `linear-gradient(to right, var(--color-accent-primary) 0%, var(--color-accent-primary) ${((speed - 0.25) / 2.75) * 100}%, var(--color-bg-tertiary) ${((speed - 0.25) / 2.75) * 100}%, var(--color-bg-tertiary) 100%)`
+                                }}
+                            />
+                        </div>
+                        <div className="flex gap-1 text-[9px] text-[var(--color-text-tertiary)] justify-center">
+                            <button onClick={() => setSpeed(0.5)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors">0.5x</button>
+                            <button onClick={() => setSpeed(1)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors">1x</button>
+                            <button onClick={() => setSpeed(1.5)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors">1.5x</button>
+                            <button onClick={() => setSpeed(2)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors">2x</button>
+                        </div>
                     </div>
                 </footer>
             </main>

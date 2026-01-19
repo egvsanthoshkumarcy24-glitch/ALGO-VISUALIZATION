@@ -31,6 +31,46 @@ export const PROBLEMS = [
         }
     }
 }`,
+        fullCode: `#include <stdio.h>
+#include <stdlib.h>
+
+void swap(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void bubbleSort(int arr[], int n) {
+    // Outer loop for each pass
+    for (int i = 0; i < n - 1; i++) {
+        // Inner loop for comparison in each pass
+        // After i passes, last i elements are sorted
+        for (int j = 0; j < n - i - 1; j++) {
+            // Compare adjacent elements
+            if (arr[j] > arr[j + 1]) {
+                // Swap if they are in wrong order
+                swap(&arr[j], &arr[j + 1]);
+            }
+        }
+    }
+}
+
+int main() {
+    int arr[] = {64, 34, 25, 12, 22, 11, 90};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    
+    printf("Original array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    bubbleSort(arr, n);
+    
+    printf("\\nSorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    return 0;
+}`,
         inputs: [
             { name: "nums", label: "Array to Sort", type: "array", defaultValue: "29, 10, 14, 37, 14, 5, 12, 20" }
         ],
@@ -179,7 +219,7 @@ export const PROBLEMS = [
     {
         id: "binary_search",
         title: "Binary Search",
-        category: CATEGORIES.BINARY_SEARCH,
+        category: CATEGORIES.SORTING,
         difficulty: "Easy",
         timeComplexity: "O(log n)",
         spaceComplexity: "O(1)",
@@ -193,6 +233,49 @@ export const PROBLEMS = [
         else r = m - 1;
     }
     return -1;
+}`,
+        fullCode: `#include <stdio.h>
+
+int binarySearch(int arr[], int n, int target) {
+    int left = 0;
+    int right = n - 1;
+    
+    while (left <= right) {
+        // Calculate middle index
+        // Using left + (right - left) / 2 to avoid overflow
+        int mid = left + (right - left) / 2;
+        
+        // Check if target is at mid
+        if (arr[mid] == target) {
+            return mid;  // Target found
+        }
+        
+        // If target is greater, ignore left half
+        if (arr[mid] < target) {
+            left = mid + 1;
+        }
+        // If target is smaller, ignore right half
+        else {
+            right = mid - 1;
+        }
+    }
+    
+    return -1;  // Target not found
+}
+
+int main() {
+    int arr[] = {2, 5, 8, 12, 16, 23, 38, 56, 72, 91};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int target = 23;
+    
+    int result = binarySearch(arr, n, target);
+    
+    if (result != -1)
+        printf("Element found at index %d\\n", result);
+    else
+        printf("Element not found in array\\n");
+    
+    return 0;
 }`,
         inputs: [
             { name: "target", label: "Target Value", type: "number", defaultValue: "8" },

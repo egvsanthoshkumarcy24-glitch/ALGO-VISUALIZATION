@@ -96,13 +96,16 @@ export function VisualizerEngine({ step }) {
                                                 <g key={`rec-node-${id}`}>
                                                     <circle
                                                         cx={coords.x} cy={coords.y} r="20"
-                                                        fill="var(--color-bg-secondary)"
+                                                        fill="var(--color-bg-tertiary)"
                                                         stroke="var(--color-accent-primary)"
                                                         strokeWidth="2"
                                                     />
                                                     <text
-                                                        x={coords.x} y={coords.y} dy=".3em"
-                                                        textAnchor="middle" fill="white" fontSize="10"
+                                                        x={coords.x} y={coords.y}
+                                                        textAnchor="middle"
+                                                        dominantBaseline="central"
+                                                        fill="var(--color-text-primary)"
+                                                        fontSize="12"
                                                         fontWeight="bold"
                                                     >
                                                         {node?.label}
@@ -240,12 +243,13 @@ export function VisualizerEngine({ step }) {
                                                     <circle
                                                         cx={x} cy={y} r={nodeRadius}
                                                         fill={isHighlighted ? "var(--color-accent-primary)" : "var(--color-bg-tertiary)"}
-                                                        stroke={isHighlighted ? "white" : "var(--color-border)"}
+                                                        stroke={isHighlighted ? "var(--color-accent-hover)" : "var(--color-accent-secondary)"}
                                                         strokeWidth={isHighlighted ? 3 : 2}
                                                     />
                                                     <text
-                                                        x={x} y={y} dy="5"
+                                                        x={x} y={y}
                                                         textAnchor="middle"
+                                                        dominantBaseline="central"
                                                         fill={isHighlighted ? "white" : "var(--color-text-primary)"}
                                                         fontSize="14"
                                                         fontWeight="bold"
@@ -323,11 +327,20 @@ export function VisualizerEngine({ step }) {
                                                 <g key={i}>
                                                     <circle
                                                         cx={x} cy={y} r="20"
-                                                        fill={isHighlighted ? "var(--color-accent-primary)" : (isVisited ? "var(--color-accent-secondary)" : "var(--color-bg-secondary)")}
-                                                        stroke={isHighlighted ? "white" : "var(--color-border)"}
-                                                        strokeWidth={isHighlighted ? 3 : 1}
+                                                        fill={isHighlighted ? "var(--color-accent-primary)" : (isVisited ? "var(--color-accent-secondary)" : "var(--color-bg-tertiary)")}
+                                                        stroke={isHighlighted ? "var(--color-accent-hover)" : "var(--color-border)"}
+                                                        strokeWidth={isHighlighted ? 3 : 2}
                                                     />
-                                                    <text x={x} y={y} dy="5" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">{i}</text>
+                                                    <text
+                                                        x={x} y={y}
+                                                        textAnchor="middle"
+                                                        dominantBaseline="central"
+                                                        fill="var(--color-text-primary)"
+                                                        fontSize="14"
+                                                        fontWeight="bold"
+                                                    >
+                                                        {i}
+                                                    </text>
                                                     {/* Labels */}
                                                     {isHighlighted && (
                                                         <text x={x} y={y - 30} textAnchor="middle" fill="var(--color-accent-primary)" fontSize="10">{relevantHighlights.join(', ')}</text>
@@ -421,22 +434,23 @@ export function VisualizerEngine({ step }) {
                                                 <g key={idx}>
                                                     <circle
                                                         cx={x} cy={y} r={nodeRadius}
-                                                        fill={isHighlighted ? "var(--color-accent-primary)" : "var(--color-bg-secondary)"}
-                                                        stroke={isHighlighted ? "white" : "var(--color-border)"}
+                                                        fill={isHighlighted ? "var(--color-accent-primary)" : "var(--color-bg-tertiary)"}
+                                                        stroke={isHighlighted ? "var(--color-accent-hover)" : "var(--color-accent-secondary)"}
                                                         strokeWidth={isHighlighted ? 3 : 2}
                                                     />
                                                     <text
-                                                        x={x} y={y} dy="5"
+                                                        x={x} y={y}
                                                         textAnchor="middle"
+                                                        dominantBaseline="central"
                                                         fill={isHighlighted ? "white" : "var(--color-text-primary)"}
-                                                        fontSize="14"
+                                                        fontSize="16"
                                                         fontWeight="bold"
                                                     >
                                                         {val}
                                                     </text>
 
                                                     {isHighlighted && (
-                                                        <text x={x} y={y - 32} textAnchor="middle" fill="var(--color-accent-primary)" fontSize="11" fontWeight="bold">{relevantHighlights.join(', ')}</text>
+                                                        <text x={x} y={y - 35} textAnchor="middle" fill="var(--color-accent-primary)" fontSize="11" fontWeight="bold">{relevantHighlights.join(', ')}</text>
                                                     )}
                                                 </g>
                                             );

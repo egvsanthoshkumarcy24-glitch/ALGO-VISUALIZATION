@@ -1028,6 +1028,8 @@ int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes
         title: 'Stack (Linked List)',
         category: CATEGORIES.LINKED_LIST,
         difficulty: 'Easy',
+        timeComplexity: 'O(1)',
+        spaceComplexity: 'O(n)',
         beginnerTips: [
             "Stack follows Last-In-First-Out (LIFO) principle",
             "Push adds element to top",
@@ -1090,6 +1092,8 @@ int main() {
         title: 'Queue (Linked List)',
         category: CATEGORIES.LINKED_LIST,
         difficulty: 'Easy',
+        timeComplexity: 'O(1)',
+        spaceComplexity: 'O(n)',
         beginnerTips: [
             "Queue follows First-In-First-Out (FIFO) principle",
             "Enqueue adds element to rear",
@@ -1153,6 +1157,8 @@ int main() {
         title: 'Doubly Linked List',
         category: CATEGORIES.LINKED_LIST,
         difficulty: 'Medium',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
         beginnerTips: [
             "Each node has two pointers: next and prev",
             "Can traverse in both directions",
@@ -1229,6 +1235,8 @@ int main() {
         title: 'Deque (Linked List)',
         category: CATEGORIES.LINKED_LIST,
         difficulty: 'Medium',
+        timeComplexity: 'O(1)',
+        spaceComplexity: 'O(n)',
         beginnerTips: [
             "Double-ended queue (deque = 'deck')",
             "Insert and remove from both ends",
@@ -1308,6 +1316,8 @@ int main() {
         title: 'Factorial (Recursion)',
         category: CATEGORIES.RECURSION,
         difficulty: 'Easy',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
         beginnerTips: [
             "Factorial of n = n × (n-1) × (n-2) × ... × 1",
             "Base case: factorial of 0 or 1 is 1",
@@ -1360,6 +1370,8 @@ int main() {
         title: 'Fibonacci (Recursion)',
         category: CATEGORIES.RECURSION,
         difficulty: 'Easy',
+        timeComplexity: 'O(2^n)',
+        spaceComplexity: 'O(n)',
         beginnerTips: [
             "Fibonacci: 0, 1, 1, 2, 3, 5, 8, 13, 21...",
             "Each number is sum of previous two",

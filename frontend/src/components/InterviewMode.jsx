@@ -421,8 +421,8 @@ export function InterviewMode({ problem, onBack }) {
 
                     {/* Step-by-Step Learning Tips */}
                     {problem.beginnerTips && (
-                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-5 rounded-xl border-2 border-green-300/50 dark:border-green-700/50 space-y-3">
-                            <h3 className="text-sm font-bold tracking-wide text-green-800 dark:text-green-300 flex items-center gap-2">
+                        <div className={`bg-gradient-to-br p-5 rounded-xl border-2 space-y-3 ${isDark ? 'from-green-950/20 to-emerald-950/20 border-green-700/50' : 'from-green-50 to-emerald-50 border-green-300/50'}`}>
+                            <h3 className={`text-sm font-bold tracking-wide flex items-center gap-2 ${isDark ? 'text-green-300' : 'text-green-800'}`}>
                                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd"/>
                                 </svg>
@@ -430,16 +430,16 @@ export function InterviewMode({ problem, onBack }) {
                             </h3>
                             <div className="space-y-2">
                                 {problem.beginnerTips.map((tip, idx) => (
-                                    <div key={idx} className="flex items-start gap-3 text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
-                                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 dark:bg-green-500/30 border border-green-500/50 flex items-center justify-center">
-                                            <span className="text-[10px] font-bold text-green-700 dark:text-green-400">{idx + 1}</span>
+                                    <div key={idx} className={`flex items-start gap-3 text-xs leading-relaxed ${isDark ? 'text-gray-300' : 'text-[var(--color-text-primary)]'}`}>
+                                        <div className={`flex-shrink-0 w-5 h-5 rounded-full border border-green-500/50 flex items-center justify-center ${isDark ? 'bg-green-500/30' : 'bg-green-500/20'}`}>
+                                            <span className={`text-[10px] font-bold ${isDark ? 'text-green-400' : 'text-green-700'}`}>{idx + 1}</span>
                                         </div>
                                         <span className="flex-1 pt-0.5">{tip}</span>
                                     </div>
                                 ))}
                             </div>
-                            <div className="pt-2 border-t border-green-300/30 dark:border-green-700/30">
-                                <p className="text-xs text-green-700 dark:text-green-300 font-medium flex items-center gap-1">
+                            <div className={`pt-2 border-t ${isDark ? 'border-green-700/30' : 'border-green-300/30'}`}>
+                                <p className={`text-xs font-medium flex items-center gap-1 ${isDark ? 'text-green-300' : 'text-green-700'}`}>
                                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                                     </svg>

@@ -61,11 +61,40 @@ ALGO-VISUALIZATION/
 
 ## ✨ Features
 
+### 🎨 Visualization & UI
 - **50+ Algorithms**: Sorting, searching, trees, graphs, DP, backtracking
 - **Step-by-Step Visualization**: Watch algorithms execute with visual feedback
+- **Rich Themed UI**: Beautiful dark mode and lavender-tinted light mode
+- **Smooth Animations**: Framer Motion-powered transitions
+- **Speed Control**: Adjust playback speed from 0.25x to 3x
+
+### 📚 Learning & Education
+- **Guided Interactive Tutorials**: Step-by-step walkthroughs with checkpoint questions
+- **Beginner-Friendly Tips**: Learning guides for every algorithm
+- **Quick Terms Glossary**: Explanations of technical terms (Big-O, iteration, etc.)
+- **Current Step Explanation**: Real-time descriptions of what's happening
+- **Complete Code Examples**: Full implementations with helper functions
+
+### ♿ Accessibility
+- **Full Keyboard Navigation**: Control everything without a mouse
+  - Space/Enter: Play/Pause
+  - Arrow keys: Navigate steps
+  - Ctrl+R: Reset, Ctrl+T: Tutorial
+- **Screen Reader Support**: Comprehensive ARIA labels and semantic HTML
+- **Focus Indicators**: Clear visual feedback for keyboard users
+- **WCAG 2.1 AA Compliant**: Proper contrast ratios and accessible design
+
+### 🔒 Security & Reliability
+- **Input Validation**: Protection against empty, oversized, or malicious inputs
+- **Execution Timeouts**: 5-second limit prevents infinite loops
+- **Resource Limits**: Memory and buffer protections
+- **User-Friendly Errors**: Clear, actionable error messages
+
+### 📊 Algorithm Organization
 - **Multiple Categories**: Arrays, Two Pointers, Sliding Window, Trees, Graphs, etc.
-- **Interview Mode**: Curated problem sets by topic
+- **Difficulty Levels**: Easy, Medium, Hard classifications
 - **Complexity Info**: Time and space complexity for each algorithm
+- **Interview Mode**: Curated problem sets by topic
 
 ---
 
@@ -86,8 +115,9 @@ ALGO-VISUALIZATION/
 
 ## 🛠️ Tech Stack
 
-**Frontend**: React 19, Vite, Tailwind CSS, Framer Motion  
+**Frontend**: React 19, Vite, Tailwind CSS, Framer Motion, Lucide React  
 **Backend**: Node.js, Express, C (GCC)  
+**Accessibility**: ARIA labels, semantic HTML, keyboard navigation  
 **Testing**: Vitest, React Testing Library  
 **Code Quality**: ESLint, Prettier, clang-format  
 **CI/CD**: GitHub Actions
@@ -166,6 +196,20 @@ GitHub Actions runs on every push/PR:
 - ✅ Security audit (npm audit)
 
 See [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
+
+---
+
+## ⌨️ Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| Space / Enter | Play / Pause visualization |
+| Right Arrow → | Next step |
+| Left Arrow ← | Previous step |
+| Ctrl/Cmd + R | Reset to beginning |
+| Ctrl/Cmd + T | Open interactive tutorial |
+
+**Note**: Shortcuts are disabled when typing in input fields.
 
 ---
 

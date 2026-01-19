@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, Button } from './ui/common';
 import { VisualizerEngine } from './VisualizerEngine';
-import { Play, Pause, SkipBack, SkipForward, RefreshCw, ArrowLeft, Loader2, AlertCircle, Settings, Clock, Boxes, Code, ChevronDown, ChevronUp, Gauge } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, RefreshCw, ArrowLeft, Loader2, AlertCircle, Settings, Clock, Boxes, Code, ChevronDown, ChevronUp, Gauge, BookOpen } from 'lucide-react';
+import { GuidedTutorial } from './GuidedTutorial';
 
 export function InterviewMode({ problem, onBack }) {
     const [logs, setLogs] = useState([]);
@@ -11,6 +12,7 @@ export function InterviewMode({ problem, onBack }) {
     const [error, setError] = useState(null);
     const [speed, setSpeed] = useState(1); // 1x speed by default
     const [showFullCode, setShowFullCode] = useState(false);
+    const [showTutorial, setShowTutorial] = useState(false);
     const [theme, setTheme] = useState(() => {
         if (typeof window !== 'undefined') {
             return document.documentElement.getAttribute('data-theme') || 'dark';
@@ -18,6 +20,7 @@ export function InterviewMode({ problem, onBack }) {
         return 'dark';
     });
     const timerRef = useRef(null);
+    const mainContentRef = useRef(null);
 
     // Form State
     const [inputValues, setInputValues] = useState({});
@@ -139,14 +142,75 @@ export function InterviewMode({ problem, onBack }) {
         setInputValues(prev => ({ ...prev, [name]: value }));
     };
 
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            // Skip if user is typing in input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            switch(e.key) {
+                case ' ':
+                case 'Enter':
+                    e.preventDefault();
+                    togglePlay();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    handleNext();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    handlePrev();
+                    break;
+                case 'r':
+                case 'R':
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        handleReset();
+                    }
+                    break;
+                case 't':
+                case 'T':
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        setShowTutorial(true);
+                    }
+                    break;
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isPlaying, currentStep, logs.length]);
+
+    const handleTutorialAction = (action) => {
+        if (action === 'run') {
+            handleRun();
+        }
+    };
+
     if (!problem) return null;
 
     return (
-        <div className="flex h-screen w-full bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] overflow-hidden">
+        <div className="flex h-screen w-full bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] overflow-hidden" role="main">
+            {/* Guided Tutorial Modal */}
+            {showTutorial && (
+                <GuidedTutorial 
+                    algorithm={problem} 
+                    onClose={() => setShowTutorial(false)}
+                    onAction={handleTutorialAction}
+                />
+            )}
+
             {/* Left Sidebar: Problem Info & Inputs */}
-            <aside className="w-1/4 h-full border-r border-[var(--color-border)] flex flex-col bg-[var(--color-bg-secondary)]">
+            <aside className="w-1/4 h-full border-r border-[var(--color-border)] flex flex-col bg-[var(--color-bg-secondary)]" role="complementary" aria-label="Algorithm information and controls">
                 <div className="p-6 pb-4 border-b border-[var(--color-border)]">
-                    <Button variant="ghost" onClick={onBack} className="mb-4 -ml-2 text-sm text-[var(--color-text-secondary)] pl-0 gap-1 hover:bg-transparent hover:text-[var(--color-accent-primary)]">
+                    <Button 
+                        variant="ghost" 
+                        onClick={onBack} 
+                        className="mb-4 -ml-2 text-sm text-[var(--color-text-secondary)] pl-0 gap-1 hover:bg-transparent hover:text-[var(--color-accent-primary)]"
+                        aria-label="Return to dashboard"
+                    >
                         <ArrowLeft size={16} /> Back to Dashboard
                     </Button>
                     <h1 className={`text-2xl font-bold ${isDark ? 'bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500' : 'text-[var(--color-accent-primary)]'} mb-2`}>
@@ -156,20 +220,31 @@ export function InterviewMode({ problem, onBack }) {
                         <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider border ${problem.difficulty === 'Easy' ? isDark ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-green-100 text-green-700 border-green-300' :
                                 problem.difficulty === 'Medium' ? isDark ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' : 'bg-yellow-100 text-yellow-700 border-yellow-300' :
                                     isDark ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-red-100 text-red-700 border-red-300'
-                            }`}>
+                            }`} role="status" aria-label={`Difficulty: ${problem.difficulty}`}>
                             {problem.difficulty}
                         </span>
-                        <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${isDark ? 'bg-[var(--color-bg-tertiary)]' : 'bg-[var(--color-bg-tertiary)]'} text-[var(--color-text-secondary)] border border-[var(--color-border)]`}>
+                        <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${isDark ? 'bg-[var(--color-bg-tertiary)]' : 'bg-[var(--color-bg-tertiary)]'} text-[var(--color-text-secondary)] border border-[var(--color-border)]`} role="status" aria-label={`Category: ${problem.category}`}>
                             {problem.category}
                         </span>
                     </div>
                 </div>
 
                 <div className="flex-1 overflow-auto p-6 space-y-6">
+                    {/* Tutorial Button */}
+                    <Button
+                        onClick={() => setShowTutorial(true)}
+                        variant="outline"
+                        className="w-full justify-center gap-2 border-[var(--color-accent-primary)] text-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)]/10"
+                        aria-label="Start guided tutorial"
+                    >
+                        <BookOpen size={16} />
+                        Start Interactive Tutorial
+                    </Button>
+
                     {/* Description */}
                     <div className="space-y-3">
                         <h3 className="text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
                             </svg>
                             What does this algorithm do?
@@ -177,9 +252,9 @@ export function InterviewMode({ problem, onBack }) {
                         <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
                             {problem.description}
                         </p>
-                        <div className="bg-[var(--color-accent-cyan)]/5 border border-[var(--color-accent-cyan)]/30 rounded-lg p-3">
+                        <div className="bg-[var(--color-accent-cyan)]/5 border border-[var(--color-accent-cyan)]/30 rounded-lg p-3" role="note" aria-label="Algorithm tip">
                             <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed flex items-start gap-2">
-                                <span className="text-[var(--color-accent-cyan)] text-sm">ℹ️</span>
+                                <span className="text-[var(--color-accent-cyan)] text-sm" aria-hidden="true">ℹ️</span>
                                 <span>
                                     {problem.id === 'bubble_sort' && "Great for beginners! Bubble sort is simple to understand but slow for large datasets. Best used for teaching purposes."}
                                     {problem.id === 'merge_sort' && "One of the most efficient sorting algorithms! Always runs in O(n log n) time, making it reliable for large datasets."}
@@ -193,23 +268,23 @@ export function InterviewMode({ problem, onBack }) {
                     </div>
 
                     {/* Complexity Info */}
-                    <div className={`${isDark ? 'bg-gradient-to-br from-[var(--color-bg-tertiary)] to-[var(--color-bg-primary)]' : 'bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-accent-primary)]/5'} p-4 rounded-xl border border-[var(--color-border)] space-y-3`}>
+                    <div className={`${isDark ? 'bg-gradient-to-br from-[var(--color-bg-tertiary)] to-[var(--color-bg-primary)]' : 'bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-accent-primary)]/5'} p-4 rounded-xl border border-[var(--color-border)] space-y-3`} role="region" aria-label="Performance metrics">
                         <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-3">⚡ Performance</h3>
                         <div className="grid grid-cols-2 gap-3">
                             <div className="flex flex-col">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <Clock size={14} className={isDark ? "text-blue-400" : "text-blue-600"} />
+                                    <Clock size={14} className={isDark ? "text-blue-400" : "text-blue-600"} aria-hidden="true" />
                                     <span className="text-[10px] uppercase tracking-wide text-[var(--color-text-secondary)]">Time</span>
                                 </div>
-                                <span className={`text-sm font-mono font-bold ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>{problem.timeComplexity || "N/A"}</span>
+                                <span className={`text-sm font-mono font-bold ${isDark ? 'text-blue-300' : 'text-blue-700'}`} aria-label={`Time complexity: ${problem.timeComplexity || "N/A"}`}>{problem.timeComplexity || "N/A"}</span>
                                 <span className="text-[9px] text-[var(--color-text-tertiary)] mt-1">How fast it runs</span>
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <Boxes size={14} className={isDark ? "text-purple-400" : "text-purple-600"} />
+                                    <Boxes size={14} className={isDark ? "text-purple-400" : "text-purple-600"} aria-hidden="true" />
                                     <span className="text-[10px] uppercase tracking-wide text-[var(--color-text-secondary)]">Space</span>
                                 </div>
-                                <span className={`text-sm font-mono font-bold ${isDark ? 'text-purple-300' : 'text-purple-700'}`}>{problem.spaceComplexity || "N/A"}</span>
+                                <span className={`text-sm font-mono font-bold ${isDark ? 'text-purple-300' : 'text-purple-700'}`} aria-label={`Space complexity: ${problem.spaceComplexity || "N/A"}`}>{problem.spaceComplexity || "N/A"}</span>
                                 <span className="text-[9px] text-[var(--color-text-tertiary)] mt-1">Memory needed</span>
                             </div>
                         </div>
@@ -217,22 +292,24 @@ export function InterviewMode({ problem, onBack }) {
 
                     {/* Inputs Configuration */}
                     {problem.inputs && (
-                        <div className="space-y-4 bg-[var(--color-bg-primary)] p-4 rounded-xl border border-[var(--color-border)]">
+                        <div className="space-y-4 bg-[var(--color-bg-primary)] p-4 rounded-xl border border-[var(--color-border)]" role="form" aria-label="Algorithm input configuration">
                             <div className="flex items-center gap-2 text-sm font-semibold text-[var(--color-text-primary)]">
-                                <Settings size={14} />
+                                <Settings size={14} aria-hidden="true" />
                                 Configuration
                             </div>
 
                             {problem.inputs.map(input => (
                                 <div key={input.name} className="space-y-1.5">
-                                    <label className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wide font-medium ml-1">
+                                    <label htmlFor={`input-${input.name}`} className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wide font-medium ml-1">
                                         {input.label}
                                     </label>
                                     <input
+                                        id={`input-${input.name}`}
                                         type="text"
                                         value={inputValues[input.name] || ''}
                                         onChange={(e) => handleInputChange(input.name, e.target.value)}
-                                        className="w-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent-primary)] transition-colors font-mono"
+                                        className="w-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent transition-all font-mono"
+                                        aria-label={input.label}
                                     />
                                 </div>
                             ))}
@@ -241,8 +318,9 @@ export function InterviewMode({ problem, onBack }) {
                                 onClick={() => handleRun()}
                                 disabled={isLoading}
                                 className="w-full justify-center mt-2 bg-[var(--color-accent-primary)] hover:bg-[var(--color-accent-hover)] text-white border-0"
+                                aria-label={isLoading ? "Visualizing algorithm" : "Start visualization"}
                             >
-                                {isLoading ? <Loader2 size={16} className="animate-spin mr-2" /> : <Play size={16} className="mr-2 fill-current" />}
+                                {isLoading ? <Loader2 size={16} className="animate-spin mr-2" aria-hidden="true" /> : <Play size={16} className="mr-2 fill-current" aria-hidden="true" />}
                                 Visualize
                             </Button>
                         </div>
@@ -547,49 +625,86 @@ export function InterviewMode({ problem, onBack }) {
 
                 {/* Playback Controls */}
                 <footer className="h-24 border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)]/50 backdrop-blur-md flex items-center justify-center gap-8 relative z-20">
-                    <div className={`flex items-center gap-6 glass-panel px-8 py-3 rounded-2xl transition-opacity duration-300 ${isLoading || error || logs.length === 0 ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
-                        <Button variant="ghost" onClick={handleReset} title="Reset" className="hover:bg-[var(--color-bg-tertiary)]">
-                            <RefreshCw size={20} />
+                    <div className={`flex items-center gap-6 glass-panel px-8 py-3 rounded-2xl transition-opacity duration-300 ${isLoading || error || logs.length === 0 ? 'opacity-50 pointer-events-none' : 'opacity-100'}`} role="toolbar" aria-label="Playback controls">
+                        <Button 
+                            variant="ghost" 
+                            onClick={handleReset} 
+                            title="Reset to beginning" 
+                            className="hover:bg-[var(--color-bg-tertiary)]"
+                            aria-label="Reset visualization to beginning"
+                        >
+                            <RefreshCw size={20} aria-hidden="true" />
                         </Button>
-                        <Button variant="ghost" onClick={handlePrev} disabled={currentStep === 0} className="hover:bg-[var(--color-bg-tertiary)]">
-                            <SkipBack size={24} fill="currentColor" />
+                        <Button 
+                            variant="ghost" 
+                            onClick={handlePrev} 
+                            disabled={currentStep === 0} 
+                            className="hover:bg-[var(--color-bg-tertiary)]"
+                            title="Previous step (Left Arrow)"
+                            aria-label="Go to previous step"
+                        >
+                            <SkipBack size={24} fill="currentColor" aria-hidden="true" />
                         </Button>
                         <Button
                             variant="primary"
                             onClick={togglePlay}
                             className="w-16 h-16 rounded-2xl !p-0 flex items-center justify-center text-white shadow-xl shadow-purple-500/20 hover:scale-105 active:scale-95 transition-all"
+                            title={`${isPlaying ? 'Pause' : 'Play'} (Space/Enter)`}
+                            aria-label={`${isPlaying ? 'Pause' : 'Play'} visualization`}
+                            aria-pressed={isPlaying}
                         >
-                            {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" className="ml-1" />}
+                            {isPlaying ? <Pause size={28} fill="currentColor" aria-hidden="true" /> : <Play size={28} fill="currentColor" className="ml-1" aria-hidden="true" />}
                         </Button>
-                        <Button variant="ghost" onClick={handleNext} disabled={currentStep === logs.length - 1} className="hover:bg-[var(--color-bg-tertiary)]">
-                            <SkipForward size={24} fill="currentColor" />
+                        <Button 
+                            variant="ghost" 
+                            onClick={handleNext} 
+                            disabled={currentStep === logs.length - 1} 
+                            className="hover:bg-[var(--color-bg-tertiary)]"
+                            title="Next step (Right Arrow)"
+                            aria-label="Go to next step"
+                        >
+                            <SkipForward size={24} fill="currentColor" aria-hidden="true" />
                         </Button>
                     </div>
                     
                     {/* Speed Control */}
-                    <div className={`flex flex-col gap-2 glass-panel px-6 py-3 rounded-2xl transition-opacity duration-300 ${isLoading || error || logs.length === 0 ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
+                    <div className={`flex flex-col gap-2 glass-panel px-6 py-3 rounded-2xl transition-opacity duration-300 ${isLoading || error || logs.length === 0 ? 'opacity-50 pointer-events-none' : 'opacity-100'}`} role="region" aria-label="Speed control">
                         <div className="flex items-center gap-3">
-                            <Gauge size={16} className="text-[var(--color-accent-primary)]" />
-                            <span className="text-xs text-[var(--color-text-secondary)] font-medium min-w-[60px]">Speed: {speed}x</span>
+                            <Gauge size={16} className="text-[var(--color-accent-primary)]" aria-hidden="true" />
+                            <label htmlFor="speed-slider" className="text-xs text-[var(--color-text-secondary)] font-medium min-w-[60px]">
+                                Speed: {speed}x
+                            </label>
                             <input
+                                id="speed-slider"
                                 type="range"
                                 min="0.25"
                                 max="3"
                                 step="0.25"
                                 value={speed}
                                 onChange={(e) => setSpeed(parseFloat(e.target.value))}
-                                className="w-32 h-2 bg-[var(--color-bg-tertiary)] rounded-lg appearance-none cursor-pointer"
+                                className="w-32 h-2 bg-[var(--color-bg-tertiary)] rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)]"
                                 style={{
                                     background: `linear-gradient(to right, var(--color-accent-primary) 0%, var(--color-accent-primary) ${((speed - 0.25) / 2.75) * 100}%, var(--color-bg-tertiary) ${((speed - 0.25) / 2.75) * 100}%, var(--color-bg-tertiary) 100%)`
                                 }}
+                                aria-valuemin="0.25"
+                                aria-valuemax="3"
+                                aria-valuenow={speed}
+                                aria-valuetext={`${speed} times speed`}
                             />
                         </div>
-                        <div className="flex gap-1 text-[9px] text-[var(--color-text-tertiary)] justify-center">
-                            <button onClick={() => setSpeed(0.5)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors">0.5x</button>
-                            <button onClick={() => setSpeed(1)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors">1x</button>
-                            <button onClick={() => setSpeed(1.5)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors">1.5x</button>
-                            <button onClick={() => setSpeed(2)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors">2x</button>
+                        <div className="flex gap-1 text-[9px] text-[var(--color-text-tertiary)] justify-center" role="group" aria-label="Speed presets">
+                            <button onClick={() => setSpeed(0.5)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] rounded" aria-label="Set speed to 0.5x">0.5x</button>
+                            <button onClick={() => setSpeed(1)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] rounded" aria-label="Set speed to 1x">1x</button>
+                            <button onClick={() => setSpeed(1.5)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] rounded" aria-label="Set speed to 1.5x">1.5x</button>
+                            <button onClick={() => setSpeed(2)} className="px-2 py-0.5 hover:text-[var(--color-accent-primary)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] rounded" aria-label="Set speed to 2x">2x</button>
                         </div>
+                    </div>
+
+                    {/* Keyboard Shortcuts Hint */}
+                    <div className="absolute bottom-2 right-4 text-[10px] text-[var(--color-text-tertiary)] flex gap-3">
+                        <span title="Press Space or Enter to play/pause">⌨️ Space/Enter: Play/Pause</span>
+                        <span title="Use arrow keys to navigate">←→: Step</span>
+                        <span title="Press Ctrl/Cmd + T for tutorial">Ctrl+T: Tutorial</span>
                     </div>
                 </footer>
             </main>
